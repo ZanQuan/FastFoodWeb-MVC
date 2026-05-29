@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Admin\" />
-    <Folder Include="Data\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

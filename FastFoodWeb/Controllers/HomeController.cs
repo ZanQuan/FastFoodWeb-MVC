@@ -1,22 +1,37 @@
-using System.Diagnostics;
+﻿using FastFoodWeb.Data;
 using FastFoodWeb.Models;
+using FastFoodWeb.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace FastFoodWeb.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IProductRepository _productRepo;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepo, ApplicationDbContext context)
         {
             _logger = logger;
+            _productRepo = productRepo;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewData["Title"] = "Trang chủ";
+            ViewBag.Featured = await _productRepo.GetFeaturedAsync();
+            ViewBag.Categories = await _context.Categories.OrderBy(c => c.Name).ToListAsync();
             return View();
         }
+
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public IActionResult Privacy()
         {

@@ -1,0 +1,153 @@
+﻿@model List<FastFoodWeb.Models.CartItem>
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    var total = Model.Sum(x => x.SubTotal);
+}
+
+<section class="section">
+    <div class="container">
+        <h1 style="font-family:var(--font-head);font-size:28px;margin-bottom:28px">
+            Giỏ hàng của bạn
+        </h1>
+
+        @if (!Model.Any())
+        {
+            <div style="text-align:center;padding:80px 0">
+                <i class="ti ti-shopping-cart-off"
+                   style="font-size:64px;opacity:.2;display:block;margin-bottom:16px"></i>
+                <p style="color:var(--text-muted);margin-bottom:20px">Giỏ hàng đang trống</p>
+                <a asp-controller="Product" asp-action="Index" class="btn-order"
+                   style="display:inline-flex">
+                    <i class="ti ti-arrow-left"></i> Xem thực đơn
+                </a>
+            </div>
+        }
+        else
+        {
+            <div style="display:grid;grid-template-columns:1fr 300px;gap:28px">
+
+                <!-- Danh sách món trong giỏ -->
+                <div>
+                    @foreach (var item in Model)
+                    {
+                        <div style="display:flex;align-items:center;gap:14px;
+                                         padding:16px;background:#fff;
+                                         border:1px solid #F0E8DF;border-radius:16px;
+                                         margin-bottom:12px">
+
+                            <!-- Ảnh -->
+                            <div style="width:64px;height:64px;background:#FFF3E8;
+                                             border-radius:12px;flex-shrink:0;overflow:hidden;
+                                             display:flex;align-items:center;justify-content:center">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl"
+                                         style="width:100%;height:100%;object-fit:cover" />
+                                }
+                                else
+                                {
+                                    <i class="ti ti-bowl-spoon"
+                                       style="font-size:24px;opacity:.3"></i>
+                                }
+                            </div>
+
+                            <!-- Tên + Giá -->
+                            <div style="flex:1">
+                                <div style="font-weight:500;margin-bottom:4px">
+                                    @item.ProductName
+                                </div>
+                                <div style="font-size:13px;color:var(--brand);font-weight:600">
+                                    @item.Price.ToString("N0")đ / phần
+                                </div>
+                            </div>
+
+                            <!-- Cập nhật số lượng -->
+                            <form asp-action="Update" method="post"
+                                  style="display:flex;align-items:center;gap:6px">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <input type="number" name="quantity" value="@item.Quantity"
+                                       min="1" max="10"
+                                       style="width:52px;text-align:center;
+                                                  border:1px solid #E8DDD4;border-radius:8px;
+                                                  padding:5px;font-size:14px" />
+                                <button type="submit"
+                                        style="background:none;border:none;
+                                                   color:var(--brand);cursor:pointer;
+                                                   font-size:12px;font-weight:500">
+                                    Cập nhật
+                                </button>
+                            </form>
+
+                            <!-- Thành tiền -->
+                            <div style="font-weight:600;min-width:88px;
+                                             text-align:right;font-size:15px">
+                                @item.SubTotal.ToString("N0")đ
+                            </div>
+
+                            <!-- Nút xóa -->
+                            <form asp-action="Remove" method="post">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit"
+                                        style="background:none;border:none;
+                                                   color:#E24B4A;cursor:pointer;font-size:20px"
+                                        aria-label="Xóa @item.ProductName">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    }
+
+                    <a asp-controller="Product" asp-action="Index"
+                       style="display:inline-flex;align-items:center;gap:6px;
+                              font-size:13px;color:var(--text-muted);margin-top:4px">
+                        <i class="ti ti-arrow-left"></i> Tiếp tục mua
+                    </a>
+                </div>
+
+                <!-- Bảng tổng đơn -->
+                <div style="background:#fff;border:1px solid #F0E8DF;
+                             border-radius:20px;padding:24px;
+                             position:sticky;top:80px;height:fit-content">
+                    <h3 style="font-size:16px;font-weight:600;margin-bottom:20px">
+                        Tổng đơn hàng
+                    </h3>
+
+                    <div style="display:flex;justify-content:space-between;
+                                 font-size:13px;margin-bottom:10px;color:var(--text-muted)">
+                        <span>Tạm tính (@Model.Count món)</span>
+                        <span>@total.ToString("N0")đ</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;
+                                 font-size:13px;margin-bottom:18px;color:var(--text-muted)">
+                        <span>Phí giao hàng</span>
+                        <span style="color:#1D9E75;font-weight:500">Miễn phí</span>
+                    </div>
+
+                    <div style="border-top:1px solid #F0E8DF;padding-top:16px;
+                                 display:flex;justify-content:space-between;
+                                 font-size:17px;font-weight:700;margin-bottom:20px">
+                        <span>Tổng cộng</span>
+                        <span style="color:var(--brand)">@total.ToString("N0")đ</span>
+                    </div>
+
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <a asp-controller="Order" asp-action="Checkout"
+                           class="btn-order"
+                           style="width:100%;justify-content:center;display:flex">
+                            <i class="ti ti-bolt"></i> Đặt hàng ngay
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login"
+                           class="btn-order"
+                           style="width:100%;justify-content:center;display:flex">
+                            <i class="ti ti-lock"></i> Đăng nhập để đặt hàng
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

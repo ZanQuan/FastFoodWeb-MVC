@@ -1362,3 +1362,99 @@ input, button, select, textarea {
         gap: 12px;
     }
 }
+
+/* ---------- LOGIN PAGE ---------- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: var(--cream2);
+    padding: 24px;
+}
+
+.login-card {
+    width: 380px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 32px 28px;
+    animation: fadeIn .4s ease;
+}
+
+    .login-card h2 {
+        font-family: var(--font-head);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .login-card .form-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .login-card .form-control {
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        padding: 10px 14px;
+        font-size: 14px;
+        transition: border-color var(--transition);
+    }
+
+        .login-card .form-control:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(255,92,26,.1);
+        }
+
+    .login-card .btn-login {
+        background: var(--brand);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        width: 100%;
+        transition: all var(--transition);
+    }
+
+        .login-card .btn-login:hover {
+            background: var(--brand-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(255,92,26,.35);
+        }
+
+    .login-card .extra-link {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 16px;
+    }
+
+        .login-card .extra-link a {
+            color: var(--brand);
+            font-weight: 600;
+            transition: color var(--transition);
+        }
+
+            .login-card .extra-link a:hover {
+                color: var(--brand-dark);
+            }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

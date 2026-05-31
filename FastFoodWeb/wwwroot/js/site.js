@@ -1,4 +1,25 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿const nav = document.getElementById('mainNav');
+if (nav) {
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 10);
+    });
+}
 
-// Write your JavaScript code.
+const hbg = document.getElementById('hamburger');
+const navLinks = document.querySelector('.nav-links');
+if (hbg && navLinks) {
+    hbg.addEventListener('click', () => {
+        hbg.classList.toggle('open');
+        navLinks.style.display =
+            navLinks.style.display === 'flex' ? 'none' : 'flex';
+    });
+}
+
+const toast = document.getElementById('toastMsg');
+if (toast) {
+    setTimeout(() => {
+        toast.style.transition = 'opacity .4s';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
+}

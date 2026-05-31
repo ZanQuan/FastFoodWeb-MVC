@@ -1,23 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Http
+
 @{
     var cartJson = Context.Session.GetString("Cart");
     var cartCount = 0;
-
     if (!string.IsNullOrEmpty(cartJson))
     {
         try
         {
             var cartItems = System.Text.Json.JsonSerializer
                 .Deserialize<List<FastFoodWeb.Models.CartItem>>(cartJson);
-
             cartCount = cartItems?.Sum(x => x.Quantity) ?? 0;
         }
-        catch
-        {
-            cartCount = 0;
-        }
+        catch { cartCount = 0; }
     }
-
     var ctrl = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLower();
 }
 
@@ -26,141 +21,110 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - FastFood</title>
-
-    @* Bootstrap *@
+    <title>@ViewData["Title"] – FastFood</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    @* Tabler Icons *@
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css" />
-
-    @* CSS *@
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-
 <body>
 
-    <!-- TOPBAR -->
+    <!--top-->
     <div class="topbar">
         <div class="topbar-inner">
-
             <div class="topbar-left">
-                <span>
-                    <i class="ti ti-phone"></i>
-                    0987 654 321
-                </span>
-
-                <span>
-                    <i class="ti ti-mail"></i>
-                    hello@fastfood.vn
-                </span>
-
-                <span>
-                    <i class="ti ti-map-pin"></i>
-                    Đà Lạt, Lâm Đồng
-                </span>
+                <span><i class="ti ti-phone"></i> 0987 654 321</span>
+                <span><i class="ti ti-mail"></i> hello@fastfood.vn</span>
+                <span><i class="ti ti-map-pin"></i> Đà Lạt, Lâm Đồng</span>
             </div>
-
             <div class="topbar-right">
-                <a href="#">
-                    <i class="ti ti-brand-facebook"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ti ti-brand-instagram"></i>
-                </a>
-
-                <a href="#">
-                    <i class="ti ti-brand-tiktok"></i>
-                </a>
+                <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="ti ti-brand-tiktok"></i></a>
+                <a href="#" aria-label="YouTube"><i class="ti ti-brand-youtube"></i></a>
             </div>
-
         </div>
     </div>
 
-    <!-- NAVBAR -->
+    <!--nav-->
     <nav class="navbar" id="mainNav">
         <div class="nav-inner">
 
-            <a asp-controller="Home"
-               asp-action="Index"
-               class="logo">
-                <i class="ti ti-bolt"></i>
-                Fast<span class="logo-dot">Food</span>
+            <a asp-controller="Home" asp-action="Index" class="logo">
+                <div class="logo-circle">
+                    <i class="ti ti-bolt"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">Fast<span>Food</span></span>
+                </div>
             </a>
 
             <ul class="nav-links">
-
                 <li>
-                    <a asp-controller="Home"
-                       asp-action="Index"
+                    <a asp-controller="Home" asp-action="Index"
                        class="@(ctrl == "home" ? "active" : "")">
                         Trang chủ
                     </a>
                 </li>
-
                 <li>
-                    <a asp-controller="Product"
-                       asp-action="Index"
+                    <a asp-controller="Product" asp-action="Index"
                        class="@(ctrl == "product" ? "active" : "")">
                         Thực đơn
                     </a>
                 </li>
-
+                <li>
+                    <a asp-controller="Order" asp-action="History"
+                       class="@(ctrl == "order" ? "active" : "")">
+                        Đơn hàng
+                    </a>
+                </li>
+                @if (User.Identity!.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-controller="Admin" asp-action="Index"
+                           class="@(ctrl == "admin" ? "active" : "")">
+                            Quản lý
+                        </a>
+                    </li>
+                }
             </ul>
 
             <div class="nav-right">
-
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                @if (User.Identity!.IsAuthenticated)
                 {
-                    <a asp-controller="Cart"
-                       asp-action="Index"
-                       class="cart-btn">
-
-                        <i class="ti ti-shopping-cart"></i>
-
-                        @if (cartCount > 0)
-                        {
-                            <span class="cart-badge">
-                                @cartCount
-                            </span>
-                        }
-                    </a>
-
-                    <form asp-controller="Account"
-                          asp-action="Logout"
-                          method="post">
-                        <button type="submit"
-                                class="btn-order">
-                            <i class="ti ti-logout"></i>
-                            Đăng xuất
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Cart" asp-action="Index"
+                           class="cart-btn" aria-label="Giỏ hàng">
+                            <i class="ti ti-shopping-cart"></i>
+                            @if (cartCount > 0)
+                            {
+                                <span class="cart-badge">@cartCount</span>
+                            }
+                        </a>
+                    }
+                    <form asp-controller="Account" asp-action="Logout"
+                          method="post" style="display:inline">
+                        <button type="submit" class="btn-order">
+                            <i class="ti ti-logout"></i> Đăng xuất
                         </button>
-
                     </form>
                 }
                 else
                 {
-                    <a asp-controller="Account"asp-action="Login"class="btn-order">
-                        <i class="ti ti-login"></i>
-                        Đăng nhập
+                    <a asp-controller="Account" asp-action="Login" class="btn-order">
+                        <i class="ti ti-shopping-bag"></i> Đặt ngay
                     </a>
                 }
-
             </div>
 
-            <button class="hamburger"
-                    id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="hamburger" id="hamburger" aria-label="Mở menu">
+                <span></span><span></span><span></span>
             </button>
 
         </div>
     </nav>
-    <!-- TOAST -->
+
+    <!--toast-->
     @if (TempData["Success"] != null)
     {
         <div class="toast success" id="toastMsg">
@@ -175,85 +139,75 @@
             @TempData["Error"]
         </div>
     }
-    <!-- CONTENT -->
+
+    <!--nd-->
     <main>
         @RenderBody()
     </main>
-    <!-- FOOTER -->
+
+    <!--foooter-->
     <footer class="footer">
         <div class="footer-grid">
             <div>
-                <span class="footer-logo">
-                    Fast<span>Food</span>
-                </span>
+                <span class="footer-logo">Fast<span>Food</span></span>
                 <p class="footer-desc">
-                    Đồ ăn nhanh ngon, giao hàng siêu tốctrong 25 phút.
+                    Đồ ăn nhanh ngon, giao hàng siêu tốc trong 25 phút.
+                    Hương vị đậm đà, nguyên liệu tươi sạch mỗi ngày.
                 </p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="ti ti-brand-tiktok"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="ti ti-brand-youtube"></i></a>
+                </div>
             </div>
             <div class="footer-col">
-                <h4>Liên kết</h4>
+                <h4>Liên kết nhanh</h4>
                 <ul>
-                    <li>
-                        <a asp-controller="Home"asp-action="Index">Trang chủ</a>
-                    </li>
-                    <li>
-                        <a asp-controller="Product"asp-action="Index">Thực đơn </a>
-                    </li>
-                    <li>
-                        <a asp-controller="Cart"asp-action="Index"> Giỏ hàng</a>
-                    </li>
+                    <li><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Thực đơn</a></li>
+                    <li><a asp-controller="Cart" asp-action="Index">Giỏ hàng</a></li>
+                    <li><a asp-controller="Order" asp-action="History">Lịch sử đơn</a></li>
                 </ul>
             </div>
-
+            <div class="footer-col">
+                <h4>Thực đơn</h4>
+                <ul>
+                    <li><a asp-controller="Product" asp-action="Index">Burger</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Pizza</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Gà rán</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Khoai tây chiên</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Tráng miệng</a></li>
+                </ul>
+            </div>
             <div class="footer-col">
                 <h4>Liên hệ</h4>
-                <p>42 Trần Phú, Đà Lạt</p>
-                <p>0987 654 321</p>
-                <p>hello@fastfood.vn</p>
+                <div class="footer-contact-item">
+                    <i class="ti ti-map-pin"></i>
+                    <span>42 Trần Phú, Phường 4,<br>Đà Lạt, Lâm Đồng</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="ti ti-phone"></i>
+                    <span>0987 654 321</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="ti ti-mail"></i>
+                    <span>hello@fastfood.vn</span>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="ti ti-clock"></i>
+                    <span>07:00 – 22:00 (Thứ 2 – CN)</span>
+                </div>
             </div>
-
         </div>
         <div class="footer-bottom">
-            © 2026 FastFood - Đồ án Lập trình Web
+            <span>© 2026 FastFood. Đồ án Lập trình Web – Nhóm 3</span>
+            <span>Đà Lạt, Lâm Đồng</span>
         </div>
     </footer>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const nav = document.getElementById('mainNav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle(
-                'scrolled',
-                window.scrollY > 10
-            );
-        });
-        const hbg = document.getElementById('hamburger');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (hbg && navLinks) {
-
-            hbg.addEventListener('click', () => {
-
-                hbg.classList.toggle('open');
-
-                navLinks.style.display =
-                    navLinks.style.display === 'flex'
-                        ? 'none'
-                        : 'flex';
-            });
-        }
-        const toast = document.getElementById('toastMsg');
-        if (toast) {
-            setTimeout(() => {
-                toast.style.transition = 'opacity .4s';
-                toast.style.opacity = '0';
-
-                setTimeout(() => {
-                    toast.remove();
-                }, 400);
-
-            }, 2500);
-        }
-    </script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

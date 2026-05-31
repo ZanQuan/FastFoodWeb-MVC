@@ -31,7 +31,6 @@ builder.Services.AddSession(opt =>
     opt.Cookie.IsEssential = true;
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

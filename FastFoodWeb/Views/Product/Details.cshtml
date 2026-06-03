@@ -1,11 +1,9 @@
-﻿@* Vị trí file: Views/Product/Details.cshtml *@
-@model FastFoodWeb.Models.Product
+﻿@model FastFoodWeb.Models.Product
 
 @{
     ViewData["Title"] = Model.Name;
 }
 
-@* ===== BREADCRUMB ===== *@
 <div class="breadcrumb-bar">
     <div class="container">
         <a asp-controller="Home" asp-action="Index">Trang chủ</a>
@@ -16,12 +14,9 @@
     </div>
 </div>
 
-@* ===== CHI TIẾT SẢN PHẨM ===== *@
 <section class="section" style="background:var(--cream)">
     <div class="container">
         <div class="detail-grid">
-
-            @* ===== CỘT TRÁI — ẢNH ===== *@
             <div>
                 <div class="detail-img-box">
                     @if (!string.IsNullOrEmpty(Model.ImageUrl))
@@ -34,8 +29,6 @@
                     }
                 </div>
             </div>
-
-            @* ===== CỘT PHẢI — THÔNG TIN ===== *@
             <div>
                 <div class="menu-cat-lbl" style="font-size:12px;margin-bottom:10px">
                     @Model.Category?.Name
@@ -47,8 +40,6 @@
                            line-height:1.2;margin-bottom:14px">
                     @Model.Name
                 </h1>
-
-                @* Rating *@
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px">
                     <span style="color:#FFB800;font-size:14px">★★★★★</span>
                     <span style="font-size:13px;color:var(--text-muted)">(128 đánh giá)</span>
@@ -61,12 +52,12 @@
 
                 <div class="detail-price">@Model.Price.ToString("N0")đ</div>
 
-                @* Form thêm giỏ hàng *@
+
                 <form asp-controller="Cart" asp-action="Add" method="post">
                     <input type="hidden" name="productId" value="@Model.Id" />
 
                     <div class="qty-row">
-                        @* Chọn số lượng *@
+
                         <div class="qty-box">
                             <button type="button" class="qty-btn"
                                     onclick="adj(-1)">
@@ -100,7 +91,7 @@
                     </div>
                 </form>
 
-                @* Tồn kho *@
+
                 @if (Model.Stock > 0)
                 {
                     <p class="stock-ok">
@@ -115,7 +106,6 @@
                     </p>
                 }
 
-                @* Tags thông tin *@
                 <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap">
                     <span style="display:inline-flex;align-items:center;gap:5px;
                                  background:#fff;border:1.5px solid #E8DDD4;
@@ -136,7 +126,6 @@
             </div>
         </div>
 
-        @* ===== MÓN LIÊN QUAN ===== *@
         @if (ViewBag.Related != null)
         {
             var related = ViewBag.Related as IEnumerable<dynamic>;

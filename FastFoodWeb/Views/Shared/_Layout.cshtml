@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
->
+
     <nav class="navbar" id="mainNav">
         <div class="nav-inner">
 
@@ -79,7 +79,7 @@
                 @if (User.Identity!.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <li>
-                        <a asp-controller="Admin" asp-action="Index"
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Index"
                            class="@(ctrl == "admin" ? "active" : "")">
                             Quản lý
                         </a>
@@ -148,7 +148,7 @@
             <div>
                 <span class="footer-logo">Fast<span>Food</span></span>
                 <p class="footer-desc">
-                    Đồ ăn nhanh ngon, giao hàng siêu tốc trong 25 phút.Hương vị đậm đà, nguyên liệu tươi sạch mỗi ngày.
+                    Đồ ăn nhanh ngon, giao hàng siêu tốc trong 25 phút. Hương vị đậm đà, nguyên liệu tươi sạch mỗi ngày.
                 </p>
                 <div class="footer-socials">
                     <a href="#" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
@@ -201,7 +201,7 @@
 
         </div>
         <div class="footer-bottom">
-            <span>© 2026 FastFood. Đồ án Lập trình Web – Nhóm 3</span>
+            <span>© 2026 FastFood. Đồ án Lập trình Web – Nhóm 2</span>
             <span>Đà Lạt, Lâm Đồng</span>
         </div>
     </footer>

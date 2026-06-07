@@ -14,20 +14,6 @@ public class CartController : Controller
     public CartController(IProductRepository productRepo)
         => _productRepo = productRepo;
 
-    // Lấy giỏ hàng từ Session
-    private List<CartItem> GetCart()
-    {
-        var json = HttpContext.Session.GetString(CartKey);
-        return json == null
-            ? new List<CartItem>()
-            : JsonSerializer.Deserialize<List<CartItem>>(json)!;
-    }
-
-    // Lưu giỏ hàng vào Session
-    private void SaveCart(List<CartItem> cart)
-        => HttpContext.Session.SetString(CartKey,
-            JsonSerializer.Serialize(cart));
-
     // GET: /Cart
     public IActionResult Index()
         => View(CartHelper.GetCart(HttpContext.Session));

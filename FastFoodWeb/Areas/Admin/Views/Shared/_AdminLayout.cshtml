@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin — @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <style>
+        body {
+            background: #F4F5F7;
+            font-family: system-ui, sans-serif;
+        }
+
+        .admin-wrap {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 230px;
+            background: #111;
+            flex-shrink: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 20px 20px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .sidebar-logo span {
+                color: #FF5C1A;
+            }
+
+        .sidebar-menu {
+            padding: 12px 0;
+            list-style: none;
+        }
+
+            .sidebar-menu li a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 20px;
+                color: rgba(255,255,255,.55);
+                font-size: 13px;
+                font-weight: 500;
+                transition: all .15s;
+                text-decoration: none;
+            }
+
+                .sidebar-menu li a:hover,
+                .sidebar-menu li a.active {
+                    color: #fff;
+                    background: rgba(255,92,26,.15);
+                }
+
+                .sidebar-menu li a i {
+                    font-size: 17px;
+                }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.3);
+            padding: 16px 20px 6px;
+        }
+
+        .main-content {
+            margin-left: 230px;
+            flex: 1;
+        }
+
+        .admin-topbar {
+            background: #fff;
+            border-bottom: 1px solid #E8E8E8;
+            padding: 0 28px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .page-content {
+            padding: 28px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #EAEAEA;
+        }
+
+        .stat-lbl {
+            font-size: 12px;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .stat-num {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111;
+            margin-top: 4px;
+        }
+
+        .data-table {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #EAEAEA;
+            overflow: hidden;
+        }
+
+            .data-table table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .data-table th {
+                background: #F8F8F8;
+                padding: 12px 16px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #666;
+                text-align: left;
+                border-bottom: 1px solid #EAEAEA;
+                text-transform: uppercase;
+                letter-spacing: .04em;
+            }
+
+            .data-table td {
+                padding: 13px 16px;
+                font-size: 13px;
+                color: #333;
+                border-bottom: 1px solid #F4F4F4;
+            }
+
+            .data-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .data-table tr:hover td {
+                background: #FAFAFA;
+            }
+
+        .btn-admin {
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all .15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary-a {
+            background: #FF5C1A;
+            color: #fff;
+        }
+
+            .btn-primary-a:hover {
+                background: #CC3D00;
+            }
+
+        .btn-edit {
+            background: #E6F1FB;
+            color: #185FA5;
+        }
+
+            .btn-edit:hover {
+                background: #B5D4F4;
+            }
+
+        .btn-delete {
+            background: #FCEBEB;
+            color: #A32D2D;
+        }
+
+            .btn-delete:hover {
+                background: #F7C1C1;
+            }
+
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrap">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="ti ti-tools-kitchen-2"></i>
+                Quick<span>Bite</span> Admin
+            </div>
+            <ul class="sidebar-menu">
+                <li><div class="sidebar-section">Tổng quan</div></li>
+                <li>
+                    @*  *@
+                    <a asp-area="Admin" asp-controller="Admin" asp-action="Index"
+                       class="@(ViewData["ActiveMenu"]?.ToString() == "dashboard" ? "active" : "")">
+                        <i class="ti ti-layout-dashboard"></i> Dashboard
+                    </a>
+                </li>
+
+                <li><div class="sidebar-section">Quản lý</div></li>
+                <li>
+                    @*  *@
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Index"
+                       class="@(ViewData["ActiveMenu"]?.ToString() == "products" ? "active" : "")">
+                        <i class="ti ti-shopping-bag"></i> Sản phẩm
+                    </a>
+                </li>
+                <li>
+                    @*  *@
+                    <a asp-area="Admin" asp-controller="Admin" asp-action="Categories"
+                       class="@(ViewData["ActiveMenu"]?.ToString() == "categories" ? "active" : "")">
+                        <i class="ti ti-category"></i> Danh mục
+                    </a>
+                </li>
+                <li>
+                    @*  *@
+                    <a asp-area="Admin" asp-controller="Admin" asp-action="Orders"
+                       class="@(ViewData["ActiveMenu"]?.ToString() == "orders" ? "active" : "")">
+                        <i class="ti ti-receipt"></i> Đơn hàng
+                    </a>
+                </li>
+
+                <li><div class="sidebar-section">Hệ thống</div></li>
+                <li>
+                    @*  *@
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="ti ti-home"></i> Về trang chủ
+                    </a>
+                </li>
+                <li>
+                    @*  *@
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" style="background:none;border:none;width:100%">
+                            <a style="pointer-events:none;color:#E24B4A">
+                                <i class="ti ti-logout"></i> Đăng xuất
+                            </a>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <div class="main-content">
+            <div class="admin-topbar">
+                <span style="font-size:15px;font-weight:500">@ViewData["Title"]</span>
+                <span style="font-size:13px;color:#888">
+                    Xin chào, <strong>@User.Identity!.Name</strong>
+                </span>
+            </div>
+            <div class="page-content">
+                @if (TempData["Success"] != null)
+                {
+                    <div style="background:#E1F5EE;color:#085041;padding:10px 16px;
+                                 border-radius:8px;margin-bottom:16px;font-size:13px">
+                        <i class="ti ti-circle-check"></i> @TempData["Success"]
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

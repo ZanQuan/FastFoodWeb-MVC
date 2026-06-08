@@ -262,12 +262,10 @@
                 </li>
                 <li>
                     @*  *@
-                    <form asp-controller="Account" asp-action="Logout" method="post">
+                    <form asp-controller="Account"asp-action="Logout"method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" style="background:none;border:none;width:100%">
-                            <a style="pointer-events:none;color:#E24B4A">
-                                <i class="ti ti-logout"></i> Đăng xuất
-                            </a>
+                        <button type="submit"style="background:none;border:none;width:100%;color:#E24B4A;text-align:left;padding:10px 20px;">
+                            <i class="ti ti-logout"></i> Đăng xuất
                         </button>
                     </form>
                 </li>

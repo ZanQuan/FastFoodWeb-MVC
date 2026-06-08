@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Đặt hàng";
+    var cart = ViewBag.Cart as List<FastFoodWeb.Models.CartItem>;
+    decimal total = ViewBag.Total;
+}
+
+<h2>Đặt hàng</h2>
+
+<div class="card p-4 mb-4">
+    <h5>Sản phẩm đã chọn</h5>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tên món</th>
+                <th>SL</th>
+                <th>Giá</th>
+                <th>Tạm tính</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in cart!)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("N0") VNĐ</td>
+                    <td>@item.SubTotal.ToString("N0") VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Tổng tiền: @total.ToString("N0") VNĐ</h4>
+</div>
+
+<form asp-action="Checkout" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Địa chỉ giao hàng</label>
+        <input name="address"
+               class="form-control"
+               required />
+    </div>
+
+    <div class="mb-3">
+        <label>Ghi chú</label>
+        <textarea name="note"
+                  class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Xác nhận đặt hàng
+    </button>
+</form>

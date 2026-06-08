@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FastFoodWeb.Models.ViewModels;
+using FastFoodWeb.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,23 +20,17 @@ public class AccountController : Controller
     }
 
     // GET: /Account/Register
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Register() => View();
+    [HttpGet, AllowAnonymous]
+    public IActionResult Register() => View(new RegisterViewModel());
 
     // POST: /Account/Register
-    [HttpPost, ValidateAntiForgeryToken]
-    [AllowAnonymous]
-    public async Task<IActionResult> Register(string email, string password)
+    [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+    public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-        {
-            ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin.");
-            return View();
-        }
+        if (!ModelState.IsValid) return View(model);
 
-        var user = new IdentityUser { UserName = email, Email = email };
-        var result = await _userManager.CreateAsync(user, password);
+        var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+        var result = await _userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
         {
@@ -43,43 +39,37 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        foreach (var err in result.Errors)
-            ModelState.AddModelError("", err.Description);
+        foreach (var e in result.Errors)
+            ModelState.AddModelError("", e.Description);
 
-        return View();
+        return View(model);
     }
 
     // GET: /Account/Login
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Login() => View();
+    [HttpGet, AllowAnonymous]
+    public IActionResult Login() => View(new LoginViewModel());
 
     // POST: /Account/Login
-    [HttpPost, ValidateAntiForgeryToken]
-    [AllowAnonymous]
-    public async Task<IActionResult> Login(string email, string password, bool rememberMe)
+    [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-        {
-            ModelState.AddModelError("", "Vui lòng nhập đầy đủ thông tin.");
-            return View();
-        }
+        if (!ModelState.IsValid) return View(model);
 
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null)
         {
             ModelState.AddModelError("", "Tài khoản không tồn tại.");
-            return View();
+            return View(model);
         }
 
         var result = await _signInManager.PasswordSignInAsync(
-            user.UserName, password, rememberMe, lockoutOnFailure: false);
+            user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
             return RedirectToAction("Index", "Home");
 
         ModelState.AddModelError("", "Email hoặc mật khẩu không đúng.");
-        return View();
+        return View(model);
     }
 
     // POST: /Account/Logout

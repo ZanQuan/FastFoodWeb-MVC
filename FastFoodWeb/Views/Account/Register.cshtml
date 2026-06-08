@@ -1,37 +1,46 @@
-﻿@{
+﻿@model FastFoodWeb.ViewModels.RegisterViewModel
+@{
     ViewData["Title"] = "Đăng ký";
 }
 
-<div class="login-container">
-    <div class="login-card">
-        <h2><i class="ti ti-user-plus"></i> Đăng ký tài khoản</h2>
+<form asp-action="Register" method="post">
+    @Html.AntiForgeryToken()
 
-        <form asp-action="Register" method="post">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input name="email" id="email" class="form-control" placeholder="Nhập email..." />
-            </div>
+    <div asp-validation-summary="ModelOnly"
+         style="color:#E24B4A;font-size:13px;margin-bottom:12px"></div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Mật khẩu</label>
-                <input name="password" id="password" type="password" class="form-control" placeholder="Nhập mật khẩu..." />
-            </div>
-
-            <button type="submit" class="btn-login">Đăng ký</button>
-        </form>
-
-        <div class="extra-link">
-            Đã có tài khoản? <a asp-controller="Account" asp-action="Login">Đăng nhập ngay</a>
-        </div>
-
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger mt-3">
-                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <p>@error.ErrorMessage</p>
-                }
-            </div>
-        }
+    <div style="margin-bottom:14px">
+        <label asp-for="Email"
+               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
+        <input asp-for="Email" class="form-control" placeholder="email@example.com" />
+        <span asp-validation-for="Email"
+              style="color:#E24B4A;font-size:12px"></span>
     </div>
-</div>
+
+    <div style="margin-bottom:14px">
+        <label asp-for="Password"
+               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
+        <input asp-for="Password" class="form-control" placeholder="••••••" />
+        <span asp-validation-for="Password"
+              style="color:#E24B4A;font-size:12px"></span>
+    </div>
+
+    <div style="margin-bottom:20px">
+        <label asp-for="ConfirmPassword"
+               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
+        <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••" />
+        <span asp-validation-for="ConfirmPassword"
+              style="color:#E24B4A;font-size:12px"></span>
+    </div>
+
+    <button type="submit" class="btn-order"
+            style="width:100%;justify-content:center">
+        Đăng ký
+    </button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

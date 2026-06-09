@@ -4,53 +4,131 @@
     decimal total = ViewBag.Total;
 }
 
-<h2>Đặt hàng</h2>
+<section class="section">
+    <div class="container">
 
-<div class="card p-4 mb-4">
-    <h5>Sản phẩm đã chọn</h5>
+        <h2 style="margin-bottom:1.5rem; font-family:var(--font-head);
+                   font-size:1.8rem; font-weight:800; color:var(--dark);">
+            Đặt hàng
+        </h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tên món</th>
-                <th>SL</th>
-                <th>Giá</th>
-                <th>Tạm tính</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in cart!)
-            {
-                <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.Price.ToString("N0") VNĐ</td>
-                    <td>@item.SubTotal.ToString("N0") VNĐ</td>
-                </tr>
+        <div class="checkout-grid">
+
+            @* CỘT TRÁI: Form địa chỉ *@
+            <div>
+                <h4 style="margin-bottom:1.25rem; font-family:var(--font-head);
+                           font-weight:700; color:var(--dark);">
+                    Thông tin giao hàng
+                </h4>
+
+                <form asp-action="Checkout" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div style="margin-bottom:1.25rem;">
+                        <label style="display:block; font-weight:600;
+                                      margin-bottom:6px; font-size:0.9rem;">
+                            Địa chỉ giao hàng <span style="color:var(--brand);">*</span>
+                        </label>
+                        <input name="address" required
+                               placeholder="Số nhà, đường, phường/xã, quận/huyện..."
+                               style="width:100%; padding:10px 14px;
+                                      border:1.5px solid var(--border);
+                                      border-radius:var(--r-sm);
+                                      font-size:0.95rem; outline:none;
+                                      transition:border-color var(--t-base);
+                                      box-sizing:border-box; background:#fff;"
+                               onfocus="this.style.borderColor='var(--brand)'"
+                               onblur="this.style.borderColor='var(--border)'" />
+                    </div>
+
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block; font-weight:600;
+                                      margin-bottom:6px; font-size:0.9rem;">
+                            Ghi chú
+                        </label>
+                        <textarea name="note" rows="4"
+                                  placeholder="Ghi chú thêm cho đơn hàng (không bắt buộc)..."
+                                  style="width:100%; padding:10px 14px;
+                                         border:1.5px solid var(--border);
+                                         border-radius:var(--r-sm);
+                                         font-size:0.95rem; outline:none; resize:vertical;
+                                         transition:border-color var(--t-base);
+                                         box-sizing:border-box; background:#fff;"
+                                  onfocus="this.style.borderColor='var(--brand)'"
+                                  onblur="this.style.borderColor='var(--border)'"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-order" style="width:100%;">
+                        <i class="ti ti-check"></i> Xác nhận đặt hàng
+                    </button>
+                </form>
+            </div>
+
+            @* CỘT PHẢI: Tóm tắt đơn hàng *@
+            <div>
+                <h4 style="margin-bottom:1.25rem; font-family:var(--font-head);
+                           font-weight:700; color:var(--dark);">
+                    Tóm tắt đơn hàng
+                </h4>
+
+                <div style="background:#fff; border:1.5px solid var(--border);
+                            border-radius:var(--r-lg); padding:1.25rem;
+                            box-shadow:var(--shadow-xs);">
+
+                    @foreach (var item in cart!)
+                    {
+                        <div style="display:flex; justify-content:space-between;
+                                        align-items:center; padding:0.6rem 0;
+                                        border-bottom:1px solid var(--border);">
+                            <div>
+                                <div style="font-weight:600; font-size:0.95rem; color:var(--dark);">
+                                    @item.ProductName
+                                </div>
+                                <div style="font-size:0.82rem; color:var(--text-muted);">
+                                    @item.Price.ToString("N0") VNĐ × @item.Quantity
+                                </div>
+                            </div>
+                            <div style="font-weight:700; white-space:nowrap; color:var(--dark);">
+                                @item.SubTotal.ToString("N0") VNĐ
+                            </div>
+                        </div>
+                    }
+
+                    <div style="display:flex; justify-content:space-between;
+                                align-items:center; padding-top:1rem; margin-top:0.25rem;">
+                        <span style="font-size:1rem; font-weight:700; color:var(--dark);">Tổng tiền</span>
+                        <span style="font-size:1.2rem; font-weight:800; color:var(--brand);">
+                            @total.ToString("N0") VNĐ
+                        </span>
+                    </div>
+
+                </div>
+
+                <p style="font-size:0.82rem; color:var(--text-faint);
+                           margin-top:0.75rem; text-align:center;">
+                    <i class="ti ti-truck"></i> Miễn phí giao hàng trong nội thành
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    @@media (max-width: 768px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+
+            .checkout-grid > div:last-child {
+                order: -1;
             }
-        </tbody>
-    </table>
-
-    <h4>Tổng tiền: @total.ToString("N0") VNĐ</h4>
-</div>
-
-<form asp-action="Checkout" method="post">
-    @Html.AntiForgeryToken()
-
-    <div class="mb-3">
-        <label>Địa chỉ giao hàng</label>
-        <input name="address"
-               class="form-control"
-               required />
-    </div>
-
-    <div class="mb-3">
-        <label>Ghi chú</label>
-        <textarea name="note"
-                  class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-success">
-        Xác nhận đặt hàng
-    </button>
-</form>
+    }
+</style>

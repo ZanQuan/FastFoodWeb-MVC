@@ -1,5 +1,195 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model FastFoodWeb.Models.Product
+
 @{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="breadcrumb-bar">
+    <div class="container">
+        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+        <span class="sep"><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <a asp-controller="Product" asp-action="Index">Thực đơn</a>
+        <span class="sep"><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <span class="current">@Model.Name</span>
+    </div>
+</div>
+
+<section class="section" style="background:var(--cream)">
+    <div class="container">
+        <div class="detail-grid">
+            <div>
+                <div class="detail-img-box">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Name" />
+                    }
+                    else
+                    {
+                        <img src="~/images/burger.jpg" alt="Món ăn" style="width:100%;height:100%;object-fit:cover" />
+                    }
+                </div>
+            </div>
+            <div>
+                <div class="menu-cat-lbl" style="font-size:12px;margin-bottom:10px">
+                    @Model.Category?.Name
+                </div>
+
+                <h1 style="font-family:var(--font-head);
+                           font-size:clamp(24px,3vw,36px);
+                           font-weight:700;color:var(--dark);
+                           line-height:1.2;margin-bottom:14px">
+                    @Model.Name
+                </h1>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px">
+                    <span style="color:#FFB800;font-size:14px">★★★★★</span>
+                    <span style="font-size:13px;color:var(--text-muted)">(128 đánh giá)</span>
+                </div>
+
+                <p style="font-size:15px;color:var(--text-muted);
+                          line-height:1.75;margin-bottom:24px;max-width:460px">
+                    @Model.Description
+                </p>
+
+                <div class="detail-price">@Model.Price.ToString("N0")đ</div>
+
+
+                <form asp-controller="Cart" asp-action="Add" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+
+                    <div class="qty-row">
+
+                        <div class="qty-box">
+                            <button type="button" class="qty-btn"
+                                    onclick="adj(-1)">
+                                −
+                            </button>
+                            <input id="qty" name="quantity" type="number"
+                                   class="qty-input"
+                                   value="1" min="1" max="10" readonly />
+                            <button type="button" class="qty-btn"
+                                    onclick="adj(1)">
+                                +
+                            </button>
+                        </div>
+
+                        @if (Model.IsAvailable)
+                        {
+                            <button type="submit" class="btn-order"
+                                    style="flex:1;justify-content:center">
+                                <i class="ti ti-shopping-cart"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn-order"
+                                    style="flex:1;justify-content:center;
+                                               opacity:.5;cursor:not-allowed" disabled>
+                                <i class="ti ti-ban"></i> Tạm hết hàng
+                            </button>
+                        }
+                    </div>
+                </form>
+
+
+                @if (Model.Stock > 0)
+                {
+                    <p class="stock-ok">
+                        <i class="ti ti-circle-check"></i>
+                        Còn hàng — còn @Model.Stock phần
+                    </p>
+                }
+                else
+                {
+                    <p class="stock-out">
+                        <i class="ti ti-circle-x"></i> Tạm hết hàng
+                    </p>
+                }
+
+                <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap">
+                    <span style="display:inline-flex;align-items:center;gap:5px;
+                                 background:#fff;border:1.5px solid #E8DDD4;
+                                 border-radius:8px;padding:6px 12px;
+                                 font-size:13px;color:var(--text-muted)">
+                        <i class="ti ti-clock" style="color:var(--brand)"></i>
+                        Giao trong 25 phút
+                    </span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;
+                                 background:#fff;border:1.5px solid #E8DDD4;
+                                 border-radius:8px;padding:6px 12px;
+                                 font-size:13px;color:var(--text-muted)">
+                        <i class="ti ti-leaf" style="color:#1D9E75"></i>
+                        Nguyên liệu tươi
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+        @if (ViewBag.Related != null)
+        {
+            var related = ViewBag.Related as IEnumerable<dynamic>;
+            if (related != null && related.Any())
+            {
+                <div style="margin-top:64px">
+                    <div style="display:flex;align-items:center;
+                                        justify-content:space-between;margin-bottom:28px">
+                        <h2 style="font-family:var(--font-head);font-size:26px;
+                                           font-weight:700;color:var(--dark)">
+                            Có thể bạn cũng thích
+                        </h2>
+                        <a asp-action="Index"
+                           asp-route-categoryId="@Model.CategoryId"
+                           class="btn-outline">
+                            Xem thêm <i class="ti ti-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="menu-grid">
+                        @foreach (var r in related)
+                        {
+                            <div class="menu-card">
+                                <div class="menu-img bg1">
+                                    @if (!string.IsNullOrEmpty((string?)r.ImageUrl))
+                                    {
+                                        <img src="@r.ImageUrl" alt="@r.Name"
+                                             style="width:100%;height:100%;object-fit:cover" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/burger.jpg" alt="Món ăn" style="width:100%;height:100%;object-fit:cover" />
+                                    }
+                                </div>
+                                <div class="menu-body">
+                                    <div class="menu-cat-lbl">@r.Category?.Name</div>
+                                    <div class="menu-name">@r.Name</div>
+                                    <div class="menu-footer">
+                                        <div class="menu-price">
+                                            <span class="price-now">@r.Price.ToString("N0")đ</span>
+                                        </div>
+                                        <a asp-action="Details"
+                                           asp-route-id="@r.Id"
+                                           class="btn-outline"
+                                           style="padding:6px 12px;font-size:12px">
+                                            Xem
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function adj(d) {
+            const q = document.getElementById('qty');
+            q.value = Math.max(1, Math.min(10, parseInt(q.value) + d));
+        }
+    </script>
 }

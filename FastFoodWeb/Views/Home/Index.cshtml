@@ -1,8 +1,58 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Trang chủ";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero" id="hero">
+    <div class="hero-left">
+        <div class="hero-tag">Giao trong 25 phút tại Đà Lạt</div>
+        <h1 class="hero-h1">
+            Ăn Ngon, Giao <em>Siêu Nhanh</em>
+        </h1>
+        <a asp-controller="Product" asp-action="Index" class="btn-order">
+            Xem thực đơn
+        </a>
+    </div>
+    <div class="hero-right">
+        <div class="hero-img-wrap">
+            <img src="~/images/burger2.jpg" alt="Burger" />
+        </div>
+    </div>
+</section>
+
+<section class="section bg-cream">
+    <div class="container">
+        <h2 class="section-h2">Món nổi bật</h2>
+        <div class="menu-grid">
+            @foreach (var p in ViewBag.Featured)
+            {
+                <div class="menu-card">
+                    <div class="menu-img bg1">
+                        @if (!string.IsNullOrEmpty(p.ImageUrl))
+                        {
+                            <img src="@p.ImageUrl"
+                                 alt="@p.Name"
+                                 style="width:100%;height:100%;object-fit:cover" />
+                        }
+                        else
+                        {
+                            <img src="~/images/burger.jpg"
+                                 alt="@p.Name"
+                                 style="width:100%;height:100%;object-fit:cover" />
+                        }
+                    </div>
+                    <div class="menu-body">
+                        <div class="menu-cat-lbl">@p.Category?.Name</div>
+                        <div class="menu-name">@p.Name</div>
+                        <div class="menu-footer">
+                            <span class="price-now">@p.Price.ToString("N0")đ</span>
+                            <form asp-controller="Cart" asp-action="Add" method="post">
+                                <input type="hidden" name="productId" value="@p.Id" />
+                                <button type="submit" class="btn-add">+</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

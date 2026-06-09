@@ -1,5 +1,73 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<FastFoodWeb.Models.Product>
 @{
+    ViewData["Title"] = "Thực đơn";
 }
+
+<section class="section bg-cream">
+    <div class="container">
+        <form asp-action="Index" method="get" class="hero-search"
+              style="max-width:480px;margin-bottom:24px">
+            <i class="ti ti-search"></i>
+            <input name="keyword" value="@ViewBag.Keyword"
+                   placeholder="Tìm tên món ăn..." />
+            <button type="submit" class="btn-search">Tìm</button>
+        </form>
+
+        <div class="filter-row">
+            <a asp-action="Index"
+               class="filter-btn @(ViewBag.CategoryId == null ? "active" : "")">
+                Tất cả
+            </a>
+            @foreach (var cat in ViewBag.Categories)
+            {
+                <a asp-action="Index" asp-route-categoryId="@cat.Id"
+                   class="filter-btn @(ViewBag.CategoryId?.ToString() == cat.Id.ToString() ? "active" : "")">
+                    @cat.Name
+                </a>
+            }
+        </div>
+
+        <!-- Lưới sản phẩm -->
+        <div class="menu-grid" style="margin-top:24px">
+            @foreach (var p in Model)
+            {
+                <div class="menu-card">
+                    <div class="menu-img bg1">
+                        @if (!string.IsNullOrEmpty(p.ImageUrl))
+                        {
+                            <img src="@p.ImageUrl" alt="@p.Name"
+                                 style="width:100%;height:100%;object-fit:cover" />
+                        }
+                    </div>
+                    <div class="menu-body">
+                        <div class="menu-cat-lbl">@p.Category?.Name</div>
+                        <div class="menu-name">@p.Name</div>
+                        <div class="menu-desc">@p.Description</div>
+                        <div class="menu-footer">
+                            <span class="price-now">@p.Price.ToString("N0")đ</span>
+                            <div style="display:flex;gap:8px;align-items:center">
+                                <a asp-action="Details" asp-route-id="@p.Id"
+                                   class="btn-outline"
+                                   style="padding:6px 10px;font-size:12px">Chi tiết</a>
+                                <form asp-controller="Cart" asp-action="Add" method="post">
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <button type="submit" class="btn-add">+</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div style="text-align:center;padding:60px 0;color:var(--text-muted)">
+                <i class="ti ti-mood-empty"
+                   style="font-size:48px;opacity:.3;display:block;margin-bottom:12px"></i>
+                Không tìm thấy món nào.
+            </div>
+        }
+
+    </div>
+</section>

@@ -1,0 +1,33 @@
+﻿@model FastFoodWeb.Models.Order
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<div class="text-center">
+
+    <h2 class="text-success">
+        Đặt hàng thành công
+    </h2>
+
+    <p>Mã đơn hàng: <strong>#@Model.Id</strong></p>
+
+    <p>
+        Ngày đặt:
+        @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")
+    </p>
+
+    <p>
+        Tổng tiền:
+        <strong>
+            @Model.TotalPrice.ToString("N0") VNĐ
+        </strong>
+    </p>
+
+    <a asp-controller="Order"
+       asp-action="History"
+       class="btn btn-primary">
+        Xem lịch sử đơn hàng
+    </a>
+
+</div>

@@ -1,47 +1,182 @@
 ﻿@model List<FastFoodWeb.Models.Order>
-
 @{
     ViewData["Title"] = "Lịch sử đơn hàng";
 }
 
-<h2>Lịch sử đơn hàng</h2>
+<section class="section">
+    <div class="container">
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">
-        Bạn chưa có đơn hàng nào.
+        <h2 style="margin-bottom:2rem; font-family:var(--font-head); font-size:1.8rem;
+                   font-weight:800; color:var(--dark);">
+            Lịch sử đơn hàng
+        </h2>
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="empty-state" style="padding:120px 24px;">
+                <i class="ti ti-receipt-2" style="font-size:72px;"></i>
+                <h3>Chưa có đơn hàng</h3>
+                <p>Bạn chưa đặt đơn hàng nào. Hãy khám phá menu của chúng tôi!</p>
+                <a asp-controller="Product" asp-action="Index" class="btn-order"
+                   style="margin-top:1.5rem; display:inline-flex;">
+                    <i class="ti ti-shopping-bag"></i> Đặt hàng ngay
+                </a>
+            </div>
+        }
+        else
+        {
+            <div style="display:grid; grid-template-columns:1fr; gap:1.5rem;">
+
+                @foreach (var order in Model)
+                {
+                    string badgeBg = "";
+                    string badgeBgAlpha = "";
+                    string badgeIcon = "";
+
+                    if (order.Status == "Hoàn thành")
+                    {
+                        badgeBg = "#1D9E75";
+                        badgeBgAlpha = "#1D9E7520";
+                        badgeIcon = "ti-check";
+                    }
+                    else if (order.Status == "Chờ xác nhận")
+                    {
+                        badgeBg = "#D4850A";
+                        badgeBgAlpha = "#D4850A20";
+                        badgeIcon = "ti-clock";
+                    }
+                    else if (order.Status == "Đang giao")
+                    {
+                        badgeBg = "#2563EB";
+                        badgeBgAlpha = "#2563EB20";
+                        badgeIcon = "ti-truck";
+                    }
+                    else if (order.Status == "Hủy")
+                    {
+                        badgeBg = "#E24B4A";
+                        badgeBgAlpha = "#E24B4A20";
+                        badgeIcon = "ti-x";
+                    }
+
+                    <div class="order-card">
+
+                        @* Header: Mã đơn + Status Badge *@
+                        <div style="display:flex; justify-content:space-between;
+                                            align-items:flex-start; margin-bottom:1.25rem;
+                                            flex-wrap:wrap; gap:1rem;">
+                            <div>
+                                <p style="font-size:0.8rem; color:var(--text-faint);
+                                                  text-transform:uppercase; font-weight:700;
+                                                  letter-spacing:0.05em; margin-bottom:4px;">
+                                    Mã đơn
+                                </p>
+                                <p style="font-size:1.25rem; font-weight:800; color:var(--dark);">
+                                    #@order.Id
+                                </p>
+                            </div>
+
+                            <div style="display:inline-flex; align-items:center; gap:6px;
+                                                background:@badgeBgAlpha; padding:6px 12px;
+                                                border-radius:var(--r-sm); color:@badgeBg;
+                                                font-weight:700; font-size:0.85rem;">
+                                <i class="ti @badgeIcon"></i>
+                                @order.Status
+                            </div>
+                        </div>
+
+                        @* Thông tin: Ngày đặt / Địa chỉ / Tổng tiền *@
+                        <div class="order-grid">
+
+                            <div>
+                                <p style="font-size:0.8rem; color:var(--text-faint);
+                                                  text-transform:uppercase; font-weight:700;
+                                                  letter-spacing:0.05em; margin-bottom:6px;">
+                                    Ngày đặt
+                                </p>
+                                <p style="color:var(--text); font-weight:600;">
+                                    @order.OrderDate.ToString("dd/MM/yyyy")
+                                </p>
+                                <p style="color:var(--text-muted); font-size:0.85rem;">
+                                    @order.OrderDate.ToString("HH:mm")
+                                </p>
+                            </div>
+
+                            <div>
+                                <p style="font-size:0.8rem; color:var(--text-faint);
+                                                  text-transform:uppercase; font-weight:700;
+                                                  letter-spacing:0.05em; margin-bottom:6px;">
+                                    Địa chỉ giao
+                                </p>
+                                <p style="color:var(--text); font-weight:500;
+                                                  overflow:hidden; text-overflow:ellipsis;
+                                                  white-space:nowrap; font-size:0.9rem;">
+                                    @order.Address
+                                </p>
+                            </div>
+
+                            <div>
+                                <p style="font-size:0.8rem; color:var(--text-faint);
+                                                  text-transform:uppercase; font-weight:700;
+                                                  letter-spacing:0.05em; margin-bottom:6px;">
+                                    Tổng tiền
+                                </p>
+                                <p style="font-size:1.1rem; font-weight:800; color:var(--brand);">
+                                    @order.TotalPrice.ToString("N0") VNĐ
+                                </p>
+                            </div>
+
+                        </div>
+
+                        @* Footer: Số sản phẩm + Nút xem chi tiết *@
+                        <div style="display:flex; justify-content:space-between;
+                                            align-items:center; padding-top:1.25rem;">
+                            <p style="color:var(--text-muted); font-size:0.9rem;">
+                                <strong>@order.OrderDetails.Count</strong> sản phẩm
+                            </p>
+                            <a asp-action="Confirmation" asp-route-id="@order.Id"
+                               class="btn-outline" style="display:inline-flex; gap:6px;">
+                                <i class="ti ti-eye"></i> Xem chi tiết
+                            </a>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
     </div>
-}
-else
-{
-    <table class="table table-bordered">
+</section>
 
-        <thead>
-            <tr>
-                <th>Mã đơn</th>
-                <th>Ngày đặt</th>
-                <th>Tổng tiền</th>
-                <th>Trạng thái</th>
-            </tr>
-        </thead>
+<style>
+    .order-card {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-xs);
+        transition: all var(--t-base);
+    }
 
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>#@item.Id</td>
-                    <td>
-                        @item.OrderDate.ToString("dd/MM/yyyy HH:mm")
-                    </td>
-                    <td>
-                        @item.TotalPrice.ToString("N0") VNĐ
-                    </td>
-                    <td>
-                        @item.Status
-                    </td>
-                </tr>
-            }
-        </tbody>
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
 
-    </table>
-}
+    .order-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        padding: 1.25rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .order-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+</style>

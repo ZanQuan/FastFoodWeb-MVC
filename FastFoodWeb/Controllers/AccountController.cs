@@ -3,6 +3,7 @@ using FastFoodWeb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using FastFoodWeb.ViewModels;
 
 namespace FastFoodWeb.Controllers;
 
@@ -20,11 +21,21 @@ public class AccountController : Controller
     }
 
     // GET: /Account/Register
+<<<<<<< Updated upstream
     [HttpGet, AllowAnonymous]
     public IActionResult Register() => View(new RegisterViewModel());
 
     // POST: /Account/Register
     [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+=======
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register() => View(new RegisterViewModel());
+
+    // POST: /Account/Register
+    [HttpPost, ValidateAntiForgeryToken]
+    [AllowAnonymous]
+>>>>>>> Stashed changes
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -46,11 +57,21 @@ public class AccountController : Controller
     }
 
     // GET: /Account/Login
+<<<<<<< Updated upstream
     [HttpGet, AllowAnonymous]
     public IActionResult Login() => View(new LoginViewModel());
 
     // POST: /Account/Login
     [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+=======
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Login() => View(new LoginViewModel());
+
+    // POST: /Account/Login
+    [HttpPost, ValidateAntiForgeryToken]
+    [AllowAnonymous]
+>>>>>>> Stashed changes
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid) return View(model);

@@ -48,4 +48,40 @@ public class AdminController : Controller
         }
         return RedirectToAction("Orders");
     }
+
+    // GET: /Admin/Admin/Categories
+    public async Task<IActionResult> Categories()
+        => View(await _db.Categories.OrderBy(c => c.Name).ToListAsync());
+
+    // POST: /Admin/Admin/CreateCategory
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateCategory(string name, string? description)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            _db.Categories.Add(new FastFoodWeb.Models.Category
+            {
+                Name = name.Trim(),
+                Description = description?.Trim(),
+                ImageUrl = string.Empty
+            });
+            await _db.SaveChangesAsync();
+            TempData["Success"] = "Thêm danh mục thành công!";
+        }
+        return RedirectToAction("Categories");
+    }
+
+    // POST: /Admin/Admin/DeleteCategory
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var category = await _db.Categories.FindAsync(id);
+        if (category != null)
+        {
+            _db.Categories.Remove(category);
+            await _db.SaveChangesAsync();
+            TempData["Success"] = "Đã xóa danh mục!";
+        }
+        return RedirectToAction("Categories");
+    }
 }

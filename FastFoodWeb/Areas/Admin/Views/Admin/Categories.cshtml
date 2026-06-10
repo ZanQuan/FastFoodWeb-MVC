@@ -1,0 +1,160 @@
+@model List<FastFoodWeb.Models.Category>
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+    ViewData["ActiveMenu"] = "categories";
+}
+
+<div style="margin-bottom:20px">
+    <h2 style="font-size:18px;font-weight:600;margin-bottom:4px">
+        Danh mục (@Model.Count)
+    </h2>
+    <p style="font-size:12px;color:#888">
+        Quản lý danh mục sản phẩm trong thực đơn
+    </p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 320px;gap:20px">
+
+    <!-- Danh sách danh mục -->
+    <div class="data-table">
+        <div style="padding:14px 18px;border-bottom:1px solid #EAEAEA;
+                    display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:14px;font-weight:600">Danh sách</span>
+            <span style="font-size:12px;color:#888">@Model.Count danh mục</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div style="padding:40px;text-align:center;color:#888;font-size:13px">
+                Chưa có danh mục nào. Thêm danh mục ở bên phải.
+            </div>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên danh mục</th>
+                        <th>Mô tả</th>
+                        <th style="text-align:center">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td style="color:#888;font-size:12px">@c.Id</td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <div style="width:32px;height:32px;background:#FFF3E8;
+                                                border-radius:8px;display:flex;
+                                                align-items:center;justify-content:center;
+                                                flex-shrink:0">
+                                        <i class="ti ti-category"
+                                           style="font-size:15px;color:#FF5C1A"></i>
+                                    </div>
+                                    <strong>@c.Name</strong>
+                                </div>
+                            </td>
+                            <td style="color:#888;font-size:12px">
+                                @(string.IsNullOrEmpty(c.Description)
+                                    ? "—"
+                                    : c.Description)
+                            </td>
+                            <td style="text-align:center">
+                                <form asp-area="Admin"
+                                      asp-controller="Admin"
+                                      asp-action="DeleteCategory"
+                                      method="post"
+                                      onsubmit="return confirm('Xóa danh mục «@c.Name»?\nCác sản phẩm thuộc danh mục này cũng sẽ bị ảnh hưởng.')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@c.Id" />
+                                    <button type="submit" class="btn-admin btn-delete">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- Form thêm danh mục mới -->
+    <div style="background:#fff;border:1px solid #EAEAEA;border-radius:12px;
+                padding:20px;height:fit-content;position:sticky;top:76px">
+        <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;
+                   display:flex;align-items:center;gap:8px">
+            <i class="ti ti-plus" style="color:#FF5C1A"></i>
+            Thêm danh mục mới
+        </h3>
+
+        <form asp-area="Admin"
+              asp-controller="Admin"
+              asp-action="CreateCategory"
+              method="post">
+            @Html.AntiForgeryToken()
+
+            <div style="margin-bottom:14px">
+                <label style="font-size:12px;font-weight:500;
+                               display:block;margin-bottom:6px;color:#444">
+                    Tên danh mục <span style="color:#E24B4A">*</span>
+                </label>
+                <input name="name"
+                       type="text"
+                       required
+                       placeholder="VD: Burger, Pizza, Gà rán..."
+                       style="width:100%;border:1px solid #E8E8E8;
+                              border-radius:8px;padding:9px 12px;
+                              font-size:13px;outline:none"
+                       onfocus="this.style.borderColor='#FF5C1A'"
+                       onblur="this.style.borderColor='#E8E8E8'" />
+            </div>
+
+            <div style="margin-bottom:18px">
+                <label style="font-size:12px;font-weight:500;
+                               display:block;margin-bottom:6px;color:#444">
+                    Mô tả (tùy chọn)
+                </label>
+                <input name="description"
+                       type="text"
+                       placeholder="Mô tả ngắn về danh mục..."
+                       style="width:100%;border:1px solid #E8E8E8;
+                              border-radius:8px;padding:9px 12px;
+                              font-size:13px;outline:none"
+                       onfocus="this.style.borderColor='#FF5C1A'"
+                       onblur="this.style.borderColor='#E8E8E8'" />
+            </div>
+
+            <button type="submit"
+                    class="btn-admin btn-primary-a"
+                    style="width:100%;justify-content:center;padding:10px">
+                <i class="ti ti-plus"></i> Thêm danh mục
+            </button>
+        </form>
+
+        <!-- Gợi ý danh mục mẫu -->
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid #F4F4F4">
+            <p style="font-size:11px;color:#888;margin-bottom:8px;font-weight:500">
+                GỢI Ý NHANH
+            </p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+                @foreach (var s in new[]{"Burger","Pizza","Gà rán","Wrap","Tráng miệng","Đồ uống","Mì ý","Khoai tây"})
+                {
+                    <button type="button"
+                            onclick="document.querySelector('[name=name]').value='@s'"
+                            style="padding:4px 10px;border-radius:16px;
+                                   border:1px solid #E8E8E8;background:#F8F8F8;
+                                   font-size:11px;cursor:pointer;transition:all .15s"
+                            onmouseover="this.style.background='#FFF3E8';this.style.borderColor='#FF5C1A'"
+                            onmouseout="this.style.background='#F8F8F8';this.style.borderColor='#E8E8E8'">
+                        @s
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

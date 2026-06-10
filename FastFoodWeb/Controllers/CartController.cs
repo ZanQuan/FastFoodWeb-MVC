@@ -8,7 +8,6 @@ namespace FastFoodWeb.Controllers;
 
 public class CartController : Controller
 {
-    private const string CartKey = "Cart";
     private readonly IProductRepository _productRepo;
 
     public CartController(IProductRepository productRepo)

@@ -22,6 +22,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(opt =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";         // redirect về login của mình
+    options.AccessDeniedPath = "/Account/Login";  // khi bị 403
+});
+
 //3. Session (giỏ hàng)
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opt =>
@@ -47,9 +53,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "areas",
@@ -70,6 +76,8 @@ using (var scope = app.Services.CreateScope())
     // Tạo roles nếu chưa có
     if (!await roleManager.RoleExistsAsync("Admin"))
         await roleManager.CreateAsync(new IdentityRole("Admin"));
+    if (!await roleManager.RoleExistsAsync("NhanVien"))
+        await roleManager.CreateAsync(new IdentityRole("NhanVien"));
     if (!await roleManager.RoleExistsAsync("User"))
         await roleManager.CreateAsync(new IdentityRole("User"));
 

@@ -31,10 +31,6 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        // RegisterViewModel đã có [Compare("Password")] attribute
-        // Không cần kiểm tra lại Password vs ConfirmPassword ở đây
-
-        // Kiểm tra email đã tồn tại chưa
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser != null)
         {
@@ -52,15 +48,14 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            //  Cần đảm bảo role "User" đã tồn tại trong database
-            // Nếu role không tồn tại, hãy thêm try-catch hoặc kiểm tra trước
+
             try
             {
                 await _userManager.AddToRoleAsync(user, "User");
             }
             catch (Exception ex)
             {
-                // Log lỗi hoặc xử lý tuỳ ý
+  
                 ModelState.AddModelError("", "Lỗi khi thêm role người dùng.");
                 return View(model);
             }
@@ -135,4 +130,73 @@ public class AccountController : Controller
     // GET: /Account/AccessDenied
     [HttpGet]
     public IActionResult AccessDenied() => View();
+
+    // FORGOT PASSWORD – Step 1: Nhập email
+    [HttpGet]
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {            ModelState.AddModelError(string.Empty, "Không tìm thấy tài khoản với email này.");
+            return View(model);
+        }
+
+        return RedirectToAction("ResetPassword", new { email = model.Email });
+    }
+
+    // RESET PASSWORD – Step 2: Nhập mật khẩu mới
+    [HttpGet]
+    public IActionResult ResetPassword(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+            return RedirectToAction("ForgotPassword");
+
+        var model = new ResetPasswordViewModel { Email = email };
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            TempData["Error"] = "Tài khoản không tồn tại.";
+            return RedirectToAction("ForgotPassword");
+        }
+
+        // Đặt lại mật khẩu mà không cần token (flow đơn giản cho đồ án)
+        var removeResult = await _userManager.RemovePasswordAsync(user);
+        if (removeResult.Succeeded)
+        {
+            var addResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+            if (addResult.Succeeded)
+            {
+                TempData["Success"] = "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.";
+                return RedirectToAction("Login");
+            }
+            foreach (var err in addResult.Errors)
+                ModelState.AddModelError(string.Empty, err.Description);
+        }
+        else
+        {
+            foreach (var err in removeResult.Errors)
+                ModelState.AddModelError(string.Empty, err.Description);
+        }
+
+        return View(model);
+    }
 }

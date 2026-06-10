@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActiveMenu"] = "dashboard";
+}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-lbl">Sản phẩm</div>
+            <div class="stat-num">@ViewBag.TotalProducts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-lbl">Danh mục</div>
+            <div class="stat-num">@ViewBag.TotalCategories</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-lbl">Tổng đơn</div>
+            <div class="stat-num">@ViewBag.TotalOrders</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-lbl">Doanh thu</div>
+            <div class="stat-num">
+                @String.Format("{0:N0}", ViewBag.TotalRevenue)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="data-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Mã đơn</th>
+                <th>Trạng thái</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.RecentOrders != null)
+            {
+                @foreach (var order in ViewBag.RecentOrders)
+                {
+                    <tr>
+                        <td>#@order.Id</td>
+                        <td>
+                            <span class="status-badge">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td>
+                            @order.OrderDate.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @String.Format("{0:N0}", order.TotalPrice) VNĐ
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

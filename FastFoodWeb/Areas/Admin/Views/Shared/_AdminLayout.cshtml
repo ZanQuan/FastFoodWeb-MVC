@@ -223,7 +223,6 @@
             <ul class="sidebar-menu">
                 <li><div class="sidebar-section">Tổng quan</div></li>
                 <li>
-                    @*  *@
                     <a asp-area="Admin" asp-controller="Admin" asp-action="Index"
                        class="@(ViewData["ActiveMenu"]?.ToString() == "dashboard" ? "active" : "")">
                         <i class="ti ti-layout-dashboard"></i> Dashboard
@@ -231,41 +230,60 @@
                 </li>
 
                 <li><div class="sidebar-section">Quản lý</div></li>
-                <li>
-                    @*  *@
-                    <a asp-area="Admin" asp-controller="Product" asp-action="Index"
-                       class="@(ViewData["ActiveMenu"]?.ToString() == "products" ? "active" : "")">
-                        <i class="ti ti-shopping-bag"></i> Sản phẩm
-                    </a>
-                </li>
-                <li>
-                    @*  *@
-                    <a asp-area="Admin" asp-controller="Admin" asp-action="Categories"
-                       class="@(ViewData["ActiveMenu"]?.ToString() == "categories" ? "active" : "")">
-                        <i class="ti ti-category"></i> Danh mục
-                    </a>
-                </li>
-                <li>
-                    @*  *@
-                    <a asp-area="Admin" asp-controller="Admin" asp-action="Orders"
-                       class="@(ViewData["ActiveMenu"]?.ToString() == "orders" ? "active" : "")">
-                        <i class="ti ti-receipt"></i> Đơn hàng
-                    </a>
-                </li>
 
-                <li><div class="sidebar-section">Hệ thống</div></li>
+                @* Sản phẩm + Danh mục: CHỈ Admin *@
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Index"
+                           class="@(ViewData["ActiveMenu"]?.ToString() == "products" ? "active" : "")">
+                            <i class="ti ti-shopping-bag"></i> Sản phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Categories"
+                           class="@(ViewData["ActiveMenu"]?.ToString() == "categories" ? "active" : "")">
+                            <i class="ti ti-category"></i> Danh mục
+                        </a>
+                    </li>
+                }
+
+                @* Đơn hàng: Admin + NhanVien *@
+                @if (User.IsInRole("Admin") || User.IsInRole("NhanVien"))
+                {
+                    <li>
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Orders"
+                           class="@(ViewData["ActiveMenu"]?.ToString() == "orders" ? "active" : "")">
+                            <i class="ti ti-receipt"></i> Đơn hàng
+                        </a>
+                    </li>
+                }
+
+                @* Quản lý Users + Roles: CHỈ Admin *@
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><div class="sidebar-section">Hệ thống</div></li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="Users"
+                           class="@(ViewData["ActiveMenu"]?.ToString() == "users" ? "active" : "")">
+                            <i class="ti ti-users"></i> Quản lý User
+                        </a>
+                    </li>
+                }
+
+                <li><div class="sidebar-section">Điều hướng</div></li>
                 <li>
-                    @*  *@
-                    <a asp-controller="Home" asp-action="Index">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
                         <i class="ti ti-home"></i> Về trang chủ
                     </a>
                 </li>
                 <li>
-                    @*  *@
-                    <form asp-controller="Account"asp-action="Logout"method="post">
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit"style="background:none;border:none;width:100%;color:#E24B4A;text-align:left;padding:10px 20px;">
-                            <i class="ti ti-logout"></i> Đăng xuất
+                        <button type="submit" style="background:none;border:none;width:100%">
+                            <a style="pointer-events:none;color:#E24B4A">
+                                <i class="ti ti-logout"></i> Đăng xuất
+                            </a>
                         </button>
                     </form>
                 </li>

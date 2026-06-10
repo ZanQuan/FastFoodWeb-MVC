@@ -1,0 +1,89 @@
+﻿@model List<Microsoft.AspNetCore.Identity.IdentityUser>
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    ViewData["ActiveMenu"] = "users";
+}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+        <h2 style="font-size:18px;font-weight:600;margin-bottom:4px">
+            Người dùng (@Model.Count)
+        </h2>
+        <p style="font-size:12px;color:#888">Phân quyền cho từng tài khoản</p>
+    </div>
+</div>
+
+<div class="data-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Xác thực email</th>
+                <th>Vai trò hiện tại</th>
+                <th>Thay đổi quyền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                var roles = (ViewBag.UserRoles as Dictionary<string, IList<string>>)?[user.Id];
+                var currentRole = roles?.FirstOrDefault() ?? "Chưa có";
+                var allRoles = ViewBag.AllRoles as List<string> ?? new List<string>();
+
+                <tr>
+                    <td><strong>@user.Email</strong></td>
+                    <td>
+                        @if (user.EmailConfirmed)
+                        {
+                            <span class="status-badge" style="background:#E1F5EE;color:#085041">Đã xác thực</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge" style="background:#FAEEDA;color:#633806">Chưa xác thực</span>
+                        }
+                    </td>
+                    <td>
+                        @if (currentRole == "Admin")
+                        {
+                            <span class="status-badge" style="background:#EEEDFE;color:#3C3489">Admin</span>
+                        }
+                        else if (currentRole == "NhanVien")
+                        {
+                            <span class="status-badge" style="background:#E6F1FB;color:#185FA5">Nhân viên</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge" style="background:#F4F4F4;color:#666">Khách hàng</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-area="Admin" asp-controller="Admin"
+                              asp-action="UpdateUserRole" method="post"
+                              style="display:flex;gap:6px;align-items:center">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <select name="newRole"
+                                    style="border:1px solid #E8E8E8;border-radius:6px;
+                                               padding:5px 8px;font-size:12px;background:#fff">
+                                @foreach (var role in allRoles)
+                                {
+                                    if (role == currentRole)
+                                    {
+                                        <option value="@role" selected>@role</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@role">@role</option>
+                                    }
+                                }
+                            </select>
+                            <button type="submit" class="btn-admin btn-edit">
+                                <i class="ti ti-check"></i> Lưu
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

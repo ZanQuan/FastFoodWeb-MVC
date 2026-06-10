@@ -1,0 +1,47 @@
+﻿@model FastFoodWeb.Models.Product
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+    ViewData["ActiveMenu"] = "products";
+}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-area="Admin"asp-controller="Product"asp-action="Create" method="post"enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Tên sản phẩm</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Giá</label>
+                <input asp-for="Price" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Stock" class="form-label">Tồn kho</label>
+                <input asp-for="Stock" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Danh mục</label>
+                <select asp-for="CategoryId"asp-items="ViewBag.Categories"class="form-select"></select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Mô tả</label>
+                <textarea asp-for="Description"rows="5"class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ảnh sản phẩm</label>
+                <input type="file"name="imageFile"class="form-control" />
+            </div>
+            <div class="form-check mb-2">
+                <input asp-for="IsAvailable"class="form-check-input" />
+                <label asp-for="IsAvailable"class="form-check-label">Đang bán</label>
+            </div>
+            <div class="form-check mb-4">
+                <input asp-for="IsFeatured"class="form-check-input" />
+                <label asp-for="IsFeatured"class="form-check-label">Sản phẩm nổi bật</label>
+            </div>
+            <button type="submit"class="btn btn-primary">Lưu sản phẩm</button>
+            <a asp-area="Admin"asp-controller="Product"asp-action="Index"class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

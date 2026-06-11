@@ -1,8 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
-
-/* =====================================================
-   CSS VARIABLES
-   ===================================================== */
+﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 :root {
     /* Brand */
     --brand: #FF5C1A;
@@ -26,8 +22,8 @@
     --border: #E8DDD4;
     --border-dark: #D0C4B8;
     /* Typography */
-    --font-head: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-head: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Inter', sans-serif;
     /* Radius */
     --r-sm: 8px;
     --r-md: 12px;
@@ -183,7 +179,7 @@ input, button, select, textarea {
     gap: 40px;
 }
 
-/* ---------- Logo (V2 — circle + serif) ---------- */
+/* ---------- Logo ---------- */
 .logo {
     display: flex;
     align-items: center;
@@ -219,9 +215,9 @@ input, button, select, textarea {
 }
 
 .logo-name {
-    font-family: 'Georgia', serif;
+    font-family: var(--font-head);
     font-size: 21px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--dark);
     letter-spacing: -.4px;
 }
@@ -238,7 +234,7 @@ input, button, select, textarea {
     font-weight: 500;
 }
 
-/* ---------- Nav links (Sarab underline style) ---------- */
+/* ---------- Nav links ---------- */
 .nav-links {
     display: flex;
     align-items: center;
@@ -261,7 +257,6 @@ input, button, select, textarea {
         white-space: nowrap;
     }
 
-        /* Sarab-style red underline */
         .nav-links li a::after {
             content: '';
             position: absolute;
@@ -375,7 +370,6 @@ input, button, select, textarea {
     box-shadow: 0 2px 10px rgba(255,92,26,.25);
 }
 
-    /* Shine sweep on hover */
     .btn-order::before {
         content: '';
         position: absolute;
@@ -519,7 +513,6 @@ input, button, select, textarea {
     position: relative;
 }
 
-    /* Dot grid pattern */
     .hero::before {
         content: '';
         position: absolute;
@@ -530,7 +523,6 @@ input, button, select, textarea {
         mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
     }
 
-    /* Warm glow bottom-right */
     .hero::after {
         content: '';
         position: absolute;
@@ -600,7 +592,6 @@ input, button, select, textarea {
         display: inline-block;
     }
 
-        /* Underline scribble on hero em */
         .hero-h1 em::after {
             content: '';
             position: absolute;
@@ -691,7 +682,6 @@ input, button, select, textarea {
     justify-content: center;
     position: relative;
     overflow: hidden;
-    /* Subtle spin aura */
     box-shadow: 0 0 0 16px rgba(255,92,26,.05), 0 0 0 32px rgba(255,92,26,.03), var(--shadow-xl);
     animation: heroImgIn .8s .2s ease both;
 }
@@ -1291,7 +1281,6 @@ input, button, select, textarea {
         pointer-events: none;
     }
 
-    /* Noise texture overlay */
     .promo-banner::after {
         content: '';
         position: absolute;
@@ -1630,7 +1619,6 @@ input, button, select, textarea {
     overflow: hidden;
 }
 
-    /* Subtle top glow */
     .footer::before {
         content: '';
         position: absolute;
@@ -2060,7 +2048,7 @@ input, button, select, textarea {
 .login-card {
     width: 390px;
     background: var(--white);
-    border-radius: var(--r-xl); 
+    border-radius: var(--r-xl);
     box-shadow: var(--shadow-lg);
     padding: 40px 32px 36px;
     display: flex;
@@ -2088,14 +2076,13 @@ input, button, select, textarea {
 .auth-title {
     font-family: var(--font-head);
     font-size: 24px;
-    font-weight: 800; 
+    font-weight: 800;
     color: var(--dark);
     margin-bottom: 28px;
     text-align: center;
     letter-spacing: -.02em;
 }
 
-/* Tích hợp icon nội bộ trường dữ liệu */
 .auth-field {
     width: 100%;
     margin-bottom: 16px;
@@ -2105,7 +2092,7 @@ input, button, select, textarea {
 .auth-field-icon {
     position: absolute;
     left: 16px;
-    top: 18px; 
+    top: 18px;
     color: var(--text-faint);
     font-size: 18px;
     pointer-events: none;
@@ -2117,7 +2104,7 @@ input, button, select, textarea {
     box-sizing: border-box;
     border: 1.5px solid var(--border);
     border-radius: var(--r-md);
-    padding: 14px 16px 14px 46px; 
+    padding: 14px 16px 14px 46px;
     font-size: 14.5px;
     color: var(--text);
     background: var(--white);
@@ -2135,7 +2122,7 @@ input, button, select, textarea {
     }
 
         .auth-input:focus ~ .auth-field-icon {
-            color: var(--brand); 
+            color: var(--brand);
         }
 
 /* Remember / Forgot row */
@@ -2176,7 +2163,7 @@ input, button, select, textarea {
         text-decoration: underline;
     }
 
-/* Submit button theo style thương hiệu */
+/* Submit button */
 .auth-submit-btn {
     width: 100%;
     padding: 14px;
@@ -2222,7 +2209,7 @@ input, button, select, textarea {
 /* Validation Errors */
 .auth-error-summary {
     width: 100%;
-    color: #E24B4A; 
+    color: #E24B4A;
     font-size: 13px;
     margin-bottom: 14px;
     background: rgba(226, 75, 74, 0.08);

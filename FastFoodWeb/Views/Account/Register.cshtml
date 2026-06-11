@@ -1,46 +1,50 @@
 ﻿@model FastFoodWeb.ViewModels.RegisterViewModel
 @{
-    ViewData["Title"] = "Đăng ký";
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<form asp-action="Register" method="post">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly"
-         style="color:#E24B4A;font-size:13px;margin-bottom:12px"></div>
-    <div style="margin-bottom:14px">
-        <label asp-for="Email"
-               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
-        <input asp-for="Email" class="form-control" placeholder="email@example.com" />
-        <span asp-validation-for="Email"
-              style="color:#E24B4A;font-size:12px"></span>
-    </div>
-    <div style="margin-bottom:14px">
-        <label asp-for="Password"
-               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
-        <input asp-for="Password" class="form-control" placeholder="••••••" />
-        <span asp-validation-for="Password"
-              style="color:#E24B4A;font-size:12px"></span>
-    </div>
-    <div style="margin-bottom:20px">
-        <label asp-for="ConfirmPassword"
-               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
-        <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••" />
-        <span asp-validation-for="ConfirmPassword"
-              style="color:#E24B4A;font-size:12px"></span>
-    </div>
-    <button type="submit" class="btn-order"
-            style="width:100%;justify-content:center">
-        Đăng ký
-    </button>
-</form>
 
-<div style="margin-top:20px;text-align:center;">
-    <p style="font-size:14px;color:#666;margin-bottom:8px">
-        Đã có tài khoản?
-        <a asp-action="Login" asp-controller="Account"
-           style="color:#D96A3B;text-decoration:none;font-weight:500">
-            Đăng nhập tại đây
-        </a>
-    </p>
+<div class="login-container">
+    <div class="login-card">
+        <div class="auth-icon-wrap">
+            <i class="ti ti-user-plus"></i>
+        </div>
+        <h2 class="auth-title">Tạo tài khoản</h2>
+
+        <form asp-action="Register" method="post" style="width: 100%;">
+            @Html.AntiForgeryToken()
+
+            @* Sử dụng cấu trúc báo lỗi có khung của hệ thống *@
+            <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
+
+            <div class="auth-field">
+                <i class="auth-field-icon ti ti-mail"></i>
+                <input asp-for="Email" class="auth-input" placeholder="Địa chỉ Email" />
+                <span asp-validation-for="Email" class="auth-error"></span>
+            </div>
+
+            <div class="auth-field">
+                <i class="auth-field-icon ti ti-lock"></i>
+                <input asp-for="Password" type="password" class="auth-input" placeholder="Mật khẩu mới" />
+                <span asp-validation-for="Password" class="auth-error"></span>
+            </div>
+
+            <div class="auth-field">
+                <i class="auth-field-icon ti ti-shield-check"></i>
+                <input asp-for="ConfirmPassword" type="password" class="auth-input" placeholder="Xác nhận mật khẩu" />
+                <span asp-validation-for="ConfirmPassword" class="auth-error"></span>
+            </div>
+
+            <button type="submit" class="auth-submit-btn">
+                Đăng ký ngay
+            </button>
+        </form>
+
+        <p class="auth-switch">
+            Bạn đã là thành viên?
+            <a asp-action="Login" asp-controller="Account">Đăng nhập tại đây</a>
+        </p>
+    </div>
 </div>
 
 @section Scripts {

@@ -1,45 +1,54 @@
 @model FastFoodWeb.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<form asp-action="Login" method="post">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly"
-         style="color:#E24B4A;font-size:13px;margin-bottom:12px"></div>
-    <div style="margin-bottom:14px">
-        <label asp-for="Email"
-               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
-        <input asp-for="Email" class="form-control" placeholder="email@example.com" />
-        <span asp-validation-for="Email"
-              style="color:#E24B4A;font-size:12px"></span>
-    </div>
-    <div style="margin-bottom:14px">
-        <label asp-for="Password"
-               style="font-size:13px;font-weight:500;display:block;margin-bottom:6px"></label>
-        <input asp-for="Password" class="form-control" placeholder="••••••" />
-        <span asp-validation-for="Password"
-              style="color:#E24B4A;font-size:12px"></span>
-    </div>
-    <div style="margin-bottom:20px">
-        <label style="font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px">
-            <input asp-for="RememberMe" type="checkbox" />
-            Ghi nhớ đăng nhập
-        </label>
-    </div>
-    <button type="submit" class="btn-order"
-            style="width:100%;justify-content:center">
-        Đăng nhập
-    </button>
-</form>
 
-<div style="margin-top:20px;text-align:center;">
-    <p style="font-size:14px;color:#666;margin-bottom:8px">
-        Chưa có tài khoản?
-        <a asp-action="Register" asp-controller="Account"
-           style="color:#D96A3B;text-decoration:none;font-weight:500">
-            Đăng ký tại đây
-        </a>
-    </p>
+<div class="login-container">
+    <div class="login-card">
+        <div class="auth-icon-wrap">
+            <i class="ti ti-lock"></i>
+        </div>
+        <h2 class="auth-title">Đăng nhập</h2>
+
+        <form asp-action="Login" method="post" style="width: 100%;">
+            @Html.AntiForgeryToken()
+
+            @* Hiển thị thông báo lỗi tổng quát hệ thống từ ModelState *@
+            <div asp-validation-summary="ModelOnly" class="auth-error-summary"></div>
+
+            <div class="auth-field">
+                <i class="auth-field-icon ti ti-mail"></i>
+                <input asp-for="Email" class="auth-input" placeholder="Email" />
+                <span asp-validation-for="Email" class="auth-error"></span>
+            </div>
+
+            <div class="auth-field">
+                <i class="auth-field-icon ti ti-key"></i>
+                <input asp-for="Password" type="password" class="auth-input" placeholder="Mật khẩu" />
+                <span asp-validation-for="Password" class="auth-error"></span>
+            </div>
+
+            <div class="auth-remember-row">
+                <label class="auth-remember-label">
+                    <input asp-for="RememberMe" type="checkbox" />
+                    <span>Ghi nhớ đăng nhập</span>
+                </label>
+                <a asp-action="ForgotPassword" asp-controller="Account" class="auth-forgot">
+                    Quên mật khẩu?
+                </a>
+            </div>
+
+            <button type="submit" class="auth-submit-btn">
+                Đăng nhập
+            </button>
+        </form>
+
+        <p class="auth-switch">
+            Chưa có tài khoản?
+            <a asp-action="Register" asp-controller="Account">Đăng ký tại đây</a>
+        </p>
+    </div>
 </div>
 
 @section Scripts {

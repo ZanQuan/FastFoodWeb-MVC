@@ -1,0 +1,256 @@
+﻿@using System.Security.Claims
+@model FastFoodWeb.Models.Order
+@{
+    ViewData["Title"] = "Theo dõi đơn hàng #" + Model.Id;
+}
+
+@* Steps định nghĩa luồng trạng thái *@
+@{
+    var steps = new[] { "Chờ xác nhận", "Đang xử lý", "Đang giao", "Hoàn thành" };
+    int currentStep = Array.IndexOf(steps, Model.Status);
+    if (Model.Status == "Hủy") currentStep = -1;
+}
+
+<section class="section">
+    <div class="container" style="max-width:680px">
+
+        @* ── HEADER ── *@
+        <div style="text-align:center;padding:32px 0 24px">
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px">
+                Mã đơn hàng
+            </p>
+            <h1 style="font-size:32px;font-weight:800;color:var(--brand)">#@Model.Id</h1>
+            <p style="font-size:13px;color:var(--text-muted)">
+                Đặt lúc @Model.OrderDate.ToString("HH:mm - dd/MM/yyyy")
+            </p>
+        </div>
+
+        @* ── ĐÃ HỦY ── *@
+        @if (Model.Status == "Hủy")
+        {
+            <div style="background:#FCEBEB;border-radius:16px;padding:32px;text-align:center;margin-bottom:24px">
+                <i class="ti ti-circle-x" style="font-size:48px;color:#E24B4A;display:block;margin-bottom:12px"></i>
+                <h3 style="color:#A32D2D;margin-bottom:8px">Đơn hàng đã bị hủy</h3>
+                <p style="color:#A32D2D;font-size:13px">
+                    Đơn hàng của bạn đã bị hủy. Vui lòng liên hệ với chúng tôi nếu cần hỗ trợ.
+                </p>
+            </div>
+        }
+        else
+        {
+            @* ── PROGRESS STEPS ── *@
+            <div style="background:#fff;border:1px solid #F0E8DF;border-radius:20px;padding:28px;margin-bottom:20px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;position:relative">
+
+                    @* Đường kẻ ngang nối các bước *@
+                    <div style="position:absolute;top:20px;left:10%;right:10%;height:3px;
+                                background:#F0E8DF;z-index:0"></div>
+                    <div id="progressLine"
+                         style="position:absolute;top:20px;left:10%;height:3px;
+                                background:var(--brand);z-index:1;transition:width 0.6s ease;
+                                width:@(currentStep <= 0 ? "0%" : currentStep == 1 ? "33%" : currentStep == 2 ? "66%" : "90%")">
+                    </div>
+
+                    @for (int i = 0; i < steps.Length; i++)
+                    {
+                        bool done = i < currentStep;
+                        bool active = i == currentStep;
+                        string color = done || active ? "var(--brand)" : "#DDD";
+                        string bg = done ? "var(--brand)" : active ? "var(--brand)" : "#fff";
+                        string tc = done || active ? "#fff" : "#AAA";
+
+                        <div style="display:flex;flex-direction:column;align-items:center;
+                                        z-index:2;flex:1" id="step-@i">
+                            <div style="width:40px;height:40px;border-radius:50%;
+                                            background:@bg;border:2px solid @color;
+                                            display:flex;align-items:center;justify-content:center;
+                                            font-size:16px;color:@tc;
+                                            transition:all 0.4s;margin-bottom:8px">
+                                @if (done)
+                                {
+                                    <i class="ti ti-check"></i>
+                                }
+                                else if (steps[i] == "Chờ xác nhận")
+                                {
+                                    <i class="ti ti-clock"></i>
+                                }
+                                else if (steps[i] == "Đang xử lý")
+                                {
+                                    <i class="ti ti-tools-kitchen-2"></i>
+                                }
+                                else if (steps[i] == "Đang giao")
+                                {
+                                    <i class="ti ti-truck"></i>
+                                }
+                                else
+                                {
+                                    <i class="ti ti-circle-check"></i>
+                                }
+                            </div>
+                            <span style="font-size:11px;font-weight:@(active ? "700" : "500");
+                                             color:@(active ? "var(--brand)" : done ? "var(--text-muted)" : "#CCC");
+                                             text-align:center;line-height:1.3">
+                                @steps[i]
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* ── TRẠNG THÁI HIỆN TẠI ── *@
+            <div id="statusCard"
+                 style="border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;
+                        background:@(Model.Status == "Hoàn thành" ? "#E1F5EE" : Model.Status == "Đang giao" ? "#E6F1FB" : Model.Status == "Đang xử lý" ? "#FAEEDA" : "#F8F8F8")">
+
+                @if (Model.Status == "Chờ xác nhận")
+                {
+                    <i class="ti ti-clock" style="font-size:40px;color:#BA7517;display:block;margin-bottom:10px"></i>
+                    <h3 style="color:#633806;margin-bottom:6px">Đang chờ xác nhận</h3>
+                    <p style="color:#633806;font-size:13px">Nhân viên sẽ xác nhận đơn của bạn ngay!</p>
+
+                    @* Animated dots *@
+                    <div style="margin-top:12px;display:flex;justify-content:center;gap:6px">
+                        <span class="dot-pulse"></span>
+                        <span class="dot-pulse" style="animation-delay:.2s"></span>
+                        <span class="dot-pulse" style="animation-delay:.4s"></span>
+                    </div>
+                }
+                else if (Model.Status == "Đang xử lý")
+                {
+                    <i class="ti ti-tools-kitchen-2" style="font-size:40px;color:#BA7517;display:block;margin-bottom:10px"></i>
+                    <h3 style="color:#633806;margin-bottom:6px">Bếp đang làm đơn của bạn</h3>
+                    <p style="color:#633806;font-size:13px">Vui lòng chờ trong giây lát...</p>
+
+                    @* Progress bar animation *@
+                    <div style="background:#FAEEDA;border-radius:6px;height:8px;
+                                    margin-top:16px;overflow:hidden">
+                        <div style="height:100%;background:#BA7517;border-radius:6px;
+                                        animation:progressAnim 3s ease-in-out infinite"></div>
+                    </div>
+                }
+                else if (Model.Status == "Đang giao")
+                {
+                    <i class="ti ti-truck" style="font-size:40px;color:#185FA5;display:block;margin-bottom:10px"></i>
+                    <h3 style="color:#0C447C;margin-bottom:6px">Đơn hàng đang trên đường đến bạn!</h3>
+                    <p style="color:#0C447C;font-size:13px">
+                        Giao đến: <strong>@Model.Address</strong>
+                    </p>
+                }
+                else if (Model.Status == "Hoàn thành")
+                {
+                    <i class="ti ti-circle-check" style="font-size:40px;color:#1D9E75;display:block;margin-bottom:10px"></i>
+                    <h3 style="color:#085041;margin-bottom:6px">Đã giao thành công!</h3>
+                    <p style="color:#085041;font-size:13px">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi ❤️</p>
+                }
+            </div>
+
+            @* ── NÚT XÁC NHẬN ĐÃ NHẬN (chỉ hiện khi Đang giao) ── *@
+            @if (Model.Status == "Đang giao")
+            {
+                <div id="confirmBtn" style="text-align:center;margin-bottom:20px">
+                    <form asp-action="ConfirmReceived" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit"
+                                class="btn-order"
+                                style="font-size:15px;padding:14px 36px"
+                                onclick="return confirm('Xác nhận bạn đã nhận được đơn hàng?')">
+                            <i class="ti ti-check"></i> Tôi đã nhận được hàng
+                        </button>
+                    </form>
+                </div>
+            }
+        }
+
+        @* ── TÓM TẮT ĐƠN HÀNG ── *@
+        <div style="background:#fff;border:1px solid #F0E8DF;border-radius:16px;padding:20px;margin-bottom:20px">
+            <h3 style="font-size:14px;font-weight:600;margin-bottom:14px">
+                <i class="ti ti-receipt" style="color:var(--brand)"></i> Chi tiết đơn hàng
+            </h3>
+            @foreach (var d in Model.OrderDetails)
+            {
+                <div style="display:flex;justify-content:space-between;
+                            font-size:13px;margin-bottom:10px;align-items:center">
+                    <span>@d.Product?.Name × @d.Quantity</span>
+                    <span style="font-weight:500">
+                        @((d.UnitPrice * d.Quantity).ToString("N0"))đ
+                    </span>
+                </div>
+            }
+            <div style="border-top:1px solid #F0E8DF;padding-top:12px;margin-top:6px;
+                    display:flex;justify-content:space-between;font-weight:700;font-size:15px">
+                <span>Tổng cộng</span>
+                <span style="color:var(--brand)">@Model.TotalPrice.ToString("N0")đ</span>
+            </div>
+        </div>
+
+        @* ── ĐIỀU HƯỚNG ── *@
+        <div style="display:flex;gap:12px;justify-content:center">
+            <a asp-action="History" class="btn-outline">
+                <i class="ti ti-list"></i> Lịch sử đơn
+            </a>
+            <a asp-controller="Product" asp-action="Index" class="btn-order">
+                <i class="ti ti-shopping-bag"></i> Tiếp tục mua
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<style>
+    .dot-pulse {
+        display: inline-block;
+        width: 8px; height: 8px;
+        background: #BA7517;
+        border-radius: 50%;
+        animation: pulse 1s ease-in-out infinite;
+    }
+    @@keyframes pulse {
+        0%, 100% { opacity: .3; transform: scale(.8); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+    @@keyframes progressAnim {
+        0% { width: 15%; }
+        50% { width: 85%; }
+        100% { width: 15%; }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script>
+        // ── SignalR: lắng nghe cập nhật từ server ──
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/orderHub")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("StatusChanged", function (newStatus) {
+            // Reload trang để cập nhật UI ngay lập tức
+            window.location.reload();
+        });
+
+        connection.start().then(function () {
+            // Join room theo userId để nhận thông báo riêng
+            const userId = "@User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier)";
+            connection.invoke("JoinOrderRoom", userId);
+        });
+
+        // ── Polling: kiểm tra trạng thái mỗi 8 giây ──
+        const orderId = @Model.Id;
+        const currentStatus = "@Model.Status";
+
+        // Chỉ poll khi đơn chưa hoàn thành/hủy
+        if (currentStatus !== "Hoàn thành" && currentStatus !== "Hủy") {
+            setInterval(async function () {
+                try {
+                    const res = await fetch(`/Order/GetStatus/${orderId}`);
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (data.status !== currentStatus) {
+                        window.location.reload();
+                    }
+                } catch (e) { }
+            }, 8000);
+        }
+    </script>
+}

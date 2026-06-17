@@ -4,6 +4,7 @@ using FastFoodWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260617072903_SeedProducts")]
+    partial class SeedProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,7 @@ namespace FastFoodWeb.Migrations
                             Id = 1,
                             CategoryId = 1,
                             Description = "Burger bò Úc xay thủ công, sốt đặc biệt, rau tươi giòn.",
-                            ImageUrl = "/images/smartburger.jpg",
+                            ImageUrl = "/images/burger.jpg",
                             IsAvailable = true,
                             IsFeatured = true,
                             Name = "Smash Burger Bò",
@@ -194,7 +197,7 @@ namespace FastFoodWeb.Migrations
                             Id = 2,
                             CategoryId = 1,
                             Description = "Đùi gà chiên giòn, sốt mayo tỏi, dưa leo tươi.",
-                            ImageUrl = "/images/burgergagion.jpg",
+                            ImageUrl = "/images/burger2.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Burger Gà Giòn",
@@ -206,7 +209,7 @@ namespace FastFoodWeb.Migrations
                             Id = 3,
                             CategoryId = 2,
                             Description = "Gà rán vàng giòn theo công thức gia truyền, kèm sốt chua ngọt.",
-                            ImageUrl = "/images/garan2mieng.jpg",
+                            ImageUrl = "/images/garan.jpg",
                             IsAvailable = true,
                             IsFeatured = true,
                             Name = "Gà Rán 2 Miếng",
@@ -218,7 +221,7 @@ namespace FastFoodWeb.Migrations
                             Id = 4,
                             CategoryId = 2,
                             Description = "Cánh gà chiên ngập dầu, phủ sốt mắm tỏi ớt đậm đà.",
-                            ImageUrl = "/images/canhgachienmam.png",
+                            ImageUrl = "/images/garan.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Cánh Gà Chiên Mắm",
@@ -230,7 +233,7 @@ namespace FastFoodWeb.Migrations
                             Id = 5,
                             CategoryId = 3,
                             Description = "Pizza đế mỏng, topping tôm mực bạch tuộc, phô mai kéo sợi.",
-                            ImageUrl = "/images/pizzahaisan.png",
+                            ImageUrl = "/images/pizza.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Pizza Hải Sản",
@@ -242,7 +245,7 @@ namespace FastFoodWeb.Migrations
                             Id = 6,
                             CategoryId = 3,
                             Description = "Thịt bò nướng BBQ, hành tây, ớt chuông, sốt đặc biệt.",
-                            ImageUrl = "/images/pizzabo.jpg",
+                            ImageUrl = "/images/pizza.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Pizza Bò BBQ",
@@ -254,7 +257,7 @@ namespace FastFoodWeb.Migrations
                             Id = 7,
                             CategoryId = 4,
                             Description = "Coca Cola lon 330ml, uống lạnh cực đã.",
-                            ImageUrl = "/images/cocacola.jpg",
+                            ImageUrl = "/images/wrap.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Coca Cola",
@@ -278,7 +281,7 @@ namespace FastFoodWeb.Migrations
                             Id = 9,
                             CategoryId = 5,
                             Description = "Bánh chocolate nóng chảy bên trong, ăn kèm kem vani.",
-                            ImageUrl = "/images/banhlava.jpg",
+                            ImageUrl = "/images/trangmieng.jpg",
                             IsAvailable = true,
                             IsFeatured = true,
                             Name = "Bánh Lava Nutella",
@@ -290,192 +293,12 @@ namespace FastFoodWeb.Migrations
                             Id = 10,
                             CategoryId = 1,
                             Description = "Bánh mì cuộn gà nướng teriyaki, rau xà lách, cà rốt bào.",
-                            ImageUrl = "/images/wrapga.jpg",
+                            ImageUrl = "/images/wrap.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Wrap Gà Teriyaki",
                             Price = 109000m,
                             Stock = 80
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CategoryId = 1,
-                            Description = "Hai lớp thịt bò, hai lớp phô mai Cheddar tan chảy, dưa leo muối.",
-                            ImageUrl = "/images/doublecheese.jpg",
-                            IsAvailable = true,
-                            IsFeatured = true,
-                            Name = "Double Cheese Burger",
-                            Price = 169000m,
-                            Stock = 80
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CategoryId = 1,
-                            Description = "Tôm sú tẩm bột tempura chiên giòn, sốt Thousand Island, xà lách.",
-                            ImageUrl = "/images/bugertom.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Burger Tôm Tempura",
-                            Price = 139000m,
-                            Stock = 70
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CategoryId = 1,
-                            Description = "Burger bò kèm nấm xào bơ tỏi và phô mai Swiss béo ngậy.",
-                            ImageUrl = "/images/mushroomswissburger.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Mushroom Swiss Burger",
-                            Price = 159000m,
-                            Stock = 60
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CategoryId = 2,
-                            Description = "Miếng gà rán bọc lớp phô mai cheddar chảy vàng bên ngoài.",
-                            ImageUrl = "/images/garanphomai.jpg",
-                            IsAvailable = true,
-                            IsFeatured = true,
-                            Name = "Gà Rán Phô Mai",
-                            Price = 115000m,
-                            Stock = 90
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CategoryId = 2,
-                            Description = "Cánh gà chiên giòn sốt cam mật ong chua ngọt, thơm lừng.",
-                            ImageUrl = "/images/canhgasotcam.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Cánh Gà Sốt Cam",
-                            Price = 89000m,
-                            Stock = 75
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CategoryId = 2,
-                            Description = "Đùi gà ướp BBQ nướng than hoa, da giòn, thịt mềm thấm gia vị.",
-                            ImageUrl = "/images/ganuongbbq.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Đùi Gà Nướng BBQ",
-                            Price = 95000m,
-                            Stock = 60
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CategoryId = 3,
-                            Description = "Bốn loại phô mai Mozzarella, Cheddar, Parmesan, Gorgonzola tan chảy.",
-                            ImageUrl = "/images/pizza4phomai.jpg",
-                            IsAvailable = true,
-                            IsFeatured = true,
-                            Name = "Pizza 4 Phô Mai",
-                            Price = 219000m,
-                            Stock = 40
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CategoryId = 3,
-                            Description = "Ức gà nướng, nấm đông cô, hành tây caramel, sốt kem trắng.",
-                            ImageUrl = "/images/pizzaganam.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Pizza Gà Nấm",
-                            Price = 179000m,
-                            Stock = 45
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CategoryId = 3,
-                            Description = "Xúc xích Pepperoni, ớt chuông nhiều màu, olive đen, sốt cà.",
-                            ImageUrl = "/images/pizzay.png",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Pizza Xúc Xích Ý",
-                            Price = 185000m,
-                            Stock = 45
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CategoryId = 4,
-                            Description = "Trà sữa Đài Loan đậm đà, trân châu đen dẻo, đá lạnh.",
-                            ImageUrl = "/images/trasuachanchau.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Trà Sữa Trân Châu",
-                            Price = 45000m,
-                            Stock = 150
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CategoryId = 4,
-                            Description = "Dâu tây tươi xay nhuyễn, sữa tươi không đường, đá bào mịn.",
-                            ImageUrl = "/images/cocacola.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Sinh Tố Dâu",
-                            Price = 49000m,
-                            Stock = 100
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CategoryId = 4,
-                            Description = "Cam Valencia ép tươi nguyên chất, không thêm đường, giàu vitamin C.",
-                            ImageUrl = "/images/sinhtodau.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Nước Cam Ép",
-                            Price = 39000m,
-                            Stock = 120
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CategoryId = 5,
-                            Description = "Kem Gelato Ý làm từ dâu tươi, vị béo mịn, ít ngọt thanh mát.",
-                            ImageUrl = "/images/gelatodau.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Kem Gelato Dâu",
-                            Price = 55000m,
-                            Stock = 80
-                        },
-                        new
-                        {
-                            Id = 24,
-                            CategoryId = 5,
-                            Description = "Cheesecake New York đế bánh quy giòn, mặt phủ compote việt quất.",
-                            ImageUrl = "/images/cheesecakevq.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Cheesecake Việt Quất",
-                            Price = 75000m,
-                            Stock = 50
-                        },
-                        new
-                        {
-                            Id = 25,
-                            CategoryId = 5,
-                            Description = "Donut chiên phồng, phủ ganache chocolate đen, rắc sprinkles màu.",
-                            ImageUrl = "/images/donutsocola.jpg",
-                            IsAvailable = true,
-                            IsFeatured = false,
-                            Name = "Bánh Donut Sô Cô La",
-                            Price = 35000m,
-                            Stock = 100
                         });
                 });
 

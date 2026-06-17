@@ -1,6 +1,5 @@
 ﻿namespace FastFoodWeb.Models;
 
-// Model này lưu vào Session, KHÔNG có DbSet trong DbContext
 public class CartItem
 {
     public int ProductId { get; set; }

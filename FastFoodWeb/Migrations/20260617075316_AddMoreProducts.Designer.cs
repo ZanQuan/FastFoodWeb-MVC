@@ -4,6 +4,7 @@ using FastFoodWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFoodWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260617075316_AddMoreProducts")]
+    partial class AddMoreProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,7 +317,7 @@ namespace FastFoodWeb.Migrations
                             Id = 12,
                             CategoryId = 1,
                             Description = "Tôm sú tẩm bột tempura chiên giòn, sốt Thousand Island, xà lách.",
-                            ImageUrl = "/images/bugertom.jpg",
+                            ImageUrl = "/images/burgertom.jpg",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Burger Tôm Tempura",
@@ -350,7 +353,7 @@ namespace FastFoodWeb.Migrations
                             Id = 15,
                             CategoryId = 2,
                             Description = "Cánh gà chiên giòn sốt cam mật ong chua ngọt, thơm lừng.",
-                            ImageUrl = "/images/canhgasotcam.jpg",
+                            ImageUrl = "/images/canhgasotcam.png",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Cánh Gà Sốt Cam",
@@ -386,7 +389,7 @@ namespace FastFoodWeb.Migrations
                             Id = 18,
                             CategoryId = 3,
                             Description = "Ức gà nướng, nấm đông cô, hành tây caramel, sốt kem trắng.",
-                            ImageUrl = "/images/pizzaganam.jpg",
+                            ImageUrl = "/images/pizzaganam.png",
                             IsAvailable = true,
                             IsFeatured = false,
                             Name = "Pizza Gà Nấm",

@@ -133,10 +133,18 @@
                             <p style="color:var(--text-muted); font-size:0.9rem;">
                                 <strong>@order.OrderDetails.Count</strong> sản phẩm
                             </p>
-                            <a asp-action="Confirmation" asp-route-id="@order.Id"
-                               class="btn-outline" style="display:inline-flex; gap:6px;">
-                                <i class="ti ti-eye"></i> Xem chi tiết
-                            </a>
+                            @if (order.Status == "Hoàn thành" || order.Status == "Hủy")
+                            {
+                                <a asp-action="Confirmation" asp-route-id="@order.Id"
+                                   class="btn-outline">Xem chi tiết</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Track" asp-route-id="@order.Id"
+                                   class="btn-order" style="display:inline-flex;gap:6px">
+                                    <i class="ti ti-radar"></i> Theo dõi đơn
+                                </a>
+                            }
                         </div>
 
                     </div>

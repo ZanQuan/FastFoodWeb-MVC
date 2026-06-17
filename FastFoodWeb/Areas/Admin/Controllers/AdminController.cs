@@ -1,4 +1,6 @@
-﻿using FastFoodWeb.Data;
+﻿using FastFoodWeb.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using FastFoodWeb.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +15,17 @@ public class AdminController : Controller
     private readonly ApplicationDbContext _db;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IHubContext<OrderHub> _hub;
     public AdminController(
         ApplicationDbContext db,
         UserManager<IdentityUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,
+        IHubContext<OrderHub> hub)
     {
         _db = db;
         _userManager = userManager;
         _roleManager = roleManager;
+        _hub = hub;
     }
 
     // GET: /Admin/Admin/Index — Dashboard
@@ -47,20 +52,58 @@ public class AdminController : Controller
             .Include(o => o.OrderDetails)
             .OrderByDescending(o => o.OrderDate).ToListAsync());
 
-    // POST: /Admin/Admin/UpdateOrderStatus
+    // 1. Nhân viên xác nhận đơn → bếp bắt đầu làm
     [HttpPost, ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,NhanVien")]
-    public async Task<IActionResult> UpdateOrderStatus(int id, string status)
+    public async Task<IActionResult> ConfirmOrder(int id)
     {
         var order = await _db.Orders.FindAsync(id);
-        if (order != null)
+        if (order != null && order.Status == "Chờ xác nhận")
         {
-            order.Status = status;
+            order.Status = "Đang xử lý";
             await _db.SaveChangesAsync();
-            TempData["Success"] = "Cập nhật trạng thái thành công!";
+            // Thông báo cho khách hàng
+            await _hub.Clients.Group($"user-{order.UserId}")
+                .SendAsync("StatusChanged", "Đang xử lý");
+            TempData["Success"] = $"Đã xác nhận đơn #{id}!";
         }
         return RedirectToAction("Orders");
     }
+
+    // 2. Bếp xong → giao hàng
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,NhanVien")]
+    public async Task<IActionResult> MarkDelivering(int id)
+    {
+        var order = await _db.Orders.FindAsync(id);
+        if (order != null && order.Status == "Đang xử lý")
+        {
+            order.Status = "Đang giao";
+            await _db.SaveChangesAsync();
+            await _hub.Clients.Group($"user-{order.UserId}")
+                .SendAsync("StatusChanged", "Đang giao");
+            TempData["Success"] = $"Đơn #{id} đang được giao!";
+        }
+        return RedirectToAction("Orders");
+    }
+
+    // 3. Hủy đơn
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin,NhanVien")]
+    public async Task<IActionResult> CancelOrder(int id)
+    {
+        var order = await _db.Orders.FindAsync(id);
+        if (order != null && order.Status != "Hoàn thành")
+        {
+            order.Status = "Hủy";
+            await _db.SaveChangesAsync();
+            await _hub.Clients.Group($"user-{order.UserId}")
+                .SendAsync("StatusChanged", "Hủy");
+            TempData["Success"] = $"Đã hủy đơn #{id}.";
+        }
+        return RedirectToAction("Orders");
+    }
+
 
     // GET: /Admin/Admin/Categories
     [Authorize(Roles = "Admin")]

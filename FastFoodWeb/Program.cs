@@ -39,7 +39,7 @@ builder.Services.AddSession(opt =>
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,6 +66,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapHub<FastFoodWeb.Hubs.OrderHub>("/orderHub");
 
 // Seed roles + tài khoản Admin mặc định khi khởi động
 using (var scope = app.Services.CreateScope())

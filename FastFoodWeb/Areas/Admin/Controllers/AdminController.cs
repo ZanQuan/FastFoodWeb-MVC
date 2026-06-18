@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using FastFoodWeb.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -28,6 +29,14 @@ public class AdminController : Controller
         _hub = hub;
     }
 
+    // Tự động gán PendingOrderCount cho sidebar badge trên mọi trang admin
+    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        ViewBag.PendingOrderCount = await _db.Orders
+            .CountAsync(o => o.Status == "Chờ xác nhận");
+        await next();
+    }
+
     // GET: /Admin/Admin/Index — Dashboard
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
@@ -48,9 +57,13 @@ public class AdminController : Controller
     // GET: /Admin/Admin/Orders
     [Authorize(Roles = "Admin,NhanVien")]
     public async Task<IActionResult> Orders()
-        => View(await _db.Orders
+    {
+        ViewBag.PendingOrderCount = await _db.Orders
+            .CountAsync(o => o.Status == "Chờ xác nhận");
+        return View(await _db.Orders
             .Include(o => o.OrderDetails)
             .OrderByDescending(o => o.OrderDate).ToListAsync());
+    }
 
     // 1. Nhân viên xác nhận đơn → bếp bắt đầu làm
     [HttpPost, ValidateAntiForgeryToken]

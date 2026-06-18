@@ -26,37 +26,6 @@
     var completed = Model.Count(o => o.Status == "Hoàn thành");
 }
 
-@* ── NOTIFICATION POPUP (SignalR) ── *@
-<div id="notifBox"
-     style="display:none;position:fixed;top:20px;right:20px;z-index:9999;
-            background:#fff;border:1.5px solid #FF5C1A;border-radius:14px;
-            padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.15);
-            min-width:280px;max-width:340px">
-    <div style="display:flex;align-items:flex-start;gap:12px">
-        <div style="width:36px;height:36px;background:#FFF3E8;border-radius:10px;
-                    display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ti ti-bell-ringing" style="font-size:20px;color:#FF5C1A"></i>
-        </div>
-        <div style="flex:1">
-            <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:3px">
-                🍔 Đơn hàng mới!
-            </div>
-            <div id="notifText" style="font-size:12px;color:#666"></div>
-        </div>
-        <button onclick="closeNotif()"
-                style="background:none;border:none;cursor:pointer;color:#999;font-size:18px;
-                       padding:0;line-height:1">
-            ×
-        </button>
-    </div>
-    <button onclick="window.location.reload()"
-            style="width:100%;margin-top:12px;background:#FF5C1A;color:#fff;
-                   border:none;border-radius:8px;padding:8px;font-size:12px;
-                   font-weight:600;cursor:pointer">
-        Xem ngay
-    </button>
-</div>
-
 @* ── HEADER ── *@
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <div>
@@ -237,36 +206,8 @@ else
 </style>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script>
-        // SignalR: nhận thông báo đơn hàng mới
-        const conn = new signalR.HubConnectionBuilder()
-            .withUrl("/orderHub")
-            .withAutomaticReconnect()
-            .build();
-
-        conn.on("NewOrder", function(data) {
-            document.getElementById("notifText").innerHTML =
-                `Đơn #${data.orderId} · ${data.itemCount} món · <strong>${data.amount}đ</strong><br>
-                 <small>${data.address} · ${data.time}</small>`;
-            document.getElementById("notifBox").style.display = "block";
-
-            // Rung notification
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-
-            // Tự ẩn sau 15 giây
-            setTimeout(closeNotif, 15000);
-        });
-
-        conn.start().then(function() {
-            conn.invoke("JoinStaffGroup");
-        });
-
-        function closeNotif() {
-            document.getElementById("notifBox").style.display = "none";
-        }
-
-        // Auto-refresh trang mỗi 30 giây để đồng bộ trạng thái
+        // Auto-refresh trang Orders mỗi 30 giây để đồng bộ trạng thái
         setTimeout(() => window.location.reload(), 30000);
     </script>
 }

@@ -222,6 +222,69 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
+    @* ── CHATBOT GỢI Ý MÓN ĂN ── *@
+    @if (!User.IsInRole("Admin") && !User.IsInRole("NhanVien"))
+    {
+        <button class="chat-toggle" id="chatToggle" aria-label="Mở chat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M4 21v-13a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v6a3 3 0 0 1 -3 3h-9l-4 4" />
+                <path d="M9.5 9h.01" />
+                <path d="M14.5 9h.01" />
+                <path d="M9.5 13a3.5 3.5 0 0 0 5 0" />
+            </svg>
+        </button>
+
+        <div class="chat-box" id="chatBox" role="dialog" aria-label="FastBot">
+
+            <div class="chat-header">
+                <div class="chat-header-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M3 14c0 -4.97 4.03 -9 9 -9s9 4.03 9 9v1a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-1z" />
+                        <path d="M4 17h16" />
+                        <path d="M7 17v4" />
+                        <path d="M17 17v4" />
+                    </svg>
+                </div>
+                <div class="chat-header-info">
+                    <div class="chat-header-name">FastBot</div>
+                    <div class="chat-header-status">Đang hoạt động</div>
+                </div>
+                <button class="chat-close" id="chatClose" aria-label="Đóng">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="chat-quick">
+                <button class="chat-quick-btn" data-msg="gợi ý">Gợi ý</button>
+                <button class="chat-quick-btn" data-msg="burger">Burger</button>
+                <button class="chat-quick-btn" data-msg="gà rán">Gà rán</button>
+                <button class="chat-quick-btn" data-msg="pizza">Pizza</button>
+                <button class="chat-quick-btn" data-msg="rẻ">Rẻ nhất</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." autocomplete="off" />
+                <button class="chat-send" id="chatSend" aria-label="Gửi">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M4.698 4.034l16.302 7.966l-16.302 7.966a.503 .503 0 0 1 -.546 -.124a.555 .555 0 0 1 -.12 -.568l2.468 -7.274l-2.468 -7.274a.555 .555 0 0 1 .12 -.568a.503 .503 0 0 1 .546 -.124z" />
+                        <path d="M6.5 12h14.5" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <script src="~/js/chatbot.js" asp-append-version="true"></script>
+    }
+
     @* ── THÔNG BÁO ĐƠN MỚI CHO ADMIN VÀ NHÂN VIÊN ── *@
     @if (User.Identity!.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("NhanVien")))
     {

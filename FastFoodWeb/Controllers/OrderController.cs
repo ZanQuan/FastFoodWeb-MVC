@@ -27,7 +27,7 @@ public class OrderController : Controller
     {
         var cart = CartHelper.GetCart(HttpContext.Session);
 
-        // Giỏ trống → quay về giỏ hàng
+        // Giỏ trống quay về giỏ hàng
         if (!cart.Any())
         {
             TempData["Error"] = "Giỏ hàng đang trống!";

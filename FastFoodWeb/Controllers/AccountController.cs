@@ -86,7 +86,6 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        // Trim whitespace từ email input
         var email = model.Email?.Trim() ?? "";
 
         var user = await _userManager.FindByEmailAsync(email);
@@ -131,7 +130,7 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult AccessDenied() => View();
 
-    // FORGOT PASSWORD – Step 1: Nhập email
+    // FORGOT PASSWORD –  Nhập email
     [HttpGet]
     public IActionResult ForgotPassword()
     {
@@ -153,7 +152,7 @@ public class AccountController : Controller
         return RedirectToAction("ResetPassword", new { email = model.Email });
     }
 
-    // RESET PASSWORD – Step 2: Nhập mật khẩu mới
+    // RESET PASSWORD –  Nhập mật khẩu mới
     [HttpGet]
     public IActionResult ResetPassword(string email)
     {
@@ -178,7 +177,7 @@ public class AccountController : Controller
             return RedirectToAction("ForgotPassword");
         }
 
-        // Đặt lại mật khẩu mà không cần token (flow đơn giản cho đồ án)
+        // Đặt lại mật khẩu mà không cần token 
         var removeResult = await _userManager.RemovePasswordAsync(user);
         if (removeResult.Succeeded)
         {

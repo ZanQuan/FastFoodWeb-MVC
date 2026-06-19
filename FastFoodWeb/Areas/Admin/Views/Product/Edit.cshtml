@@ -1,4 +1,4 @@
-﻿@model FastFoodWeb.Models.Product
+@model FastFoodWeb.Models.Product
 
 @{
     ViewData["Title"] = "Cập nhật sản phẩm";
@@ -6,7 +6,7 @@
 }
 <div class="card shadow-sm">
     <div class="card-body">
-        <form asp-area="Admin"asp-controller="Product"asp-action="Edit"method="post"enctype="multipart/form-data">
+        <form asp-area="Admin" asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="ImageUrl" />
             <div class="mb-3">
@@ -23,35 +23,34 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Danh mục</label>
-                <select asp-for="CategoryId"asp-items="ViewBag.Categories" class="form-select">
-                </select>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
             </div>
             <div class="mb-3">
                 <label asp-for="Description" class="form-label">Mô tả</label>
-                <textarea asp-for="Description"rows="5"class="form-control"></textarea>
+                <textarea asp-for="Description" rows="5" class="form-control"></textarea>
             </div>
             @if (!string.IsNullOrEmpty(Model?.ImageUrl))
             {
                 <div class="mb-3">
                     <label class="form-label">Ảnh hiện tại</label>
                     <br />
-                    <img src="@Model.ImageUrl"style="width:200px;border-radius:10px;" />
+                    <img src="@Model.ImageUrl" style="width:200px;border-radius:10px;" />
                 </div>
             }
             <div class="mb-3">
                 <label class="form-label">Chọn ảnh mới</label>
-                <input type="file" name="imageFile"class="form-control" />
+                <input type="file" name="imageFile" class="form-control" />
             </div>
             <div class="form-check mb-2">
-                <input asp-for="IsAvailable"class="form-check-input" />
-                <label asp-for="IsAvailable"class="form-check-label">Đang bán</label>
+                <input asp-for="IsAvailable" class="form-check-input" />
+                <label asp-for="IsAvailable" class="form-check-label">Đang bán</label>
             </div>
             <div class="form-check mb-4">
-                <input asp-for="IsFeatured"class="form-check-input" />
-                <label asp-for="IsFeatured"class="form-check-label">Sản phẩm nổi bật</label>
+                <input asp-for="IsFeatured" class="form-check-input" />
+                <label asp-for="IsFeatured" class="form-check-label">Sản phẩm nổi bật</label>
             </div>
-            <button type="submit"class="btn btn-primary">Cập nhật</button>
-            <a asp-area="Admin"asp-controller="Product"asp-action="Index"class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
         </form>
     </div>
 </div>

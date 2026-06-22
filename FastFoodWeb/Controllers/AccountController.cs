@@ -55,7 +55,7 @@ public class AccountController : Controller
             }
             catch (Exception ex)
             {
-  
+
                 ModelState.AddModelError("", "Lỗi khi thêm role người dùng.");
                 return View(model);
             }
@@ -145,7 +145,8 @@ public class AccountController : Controller
             return View(model);
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null)
-        {            ModelState.AddModelError(string.Empty, "Không tìm thấy tài khoản với email này.");
+        {
+            ModelState.AddModelError(string.Empty, "Không tìm thấy tài khoản với email này.");
             return View(model);
         }
 
@@ -194,6 +195,43 @@ public class AccountController : Controller
         {
             foreach (var err in removeResult.Errors)
                 ModelState.AddModelError(string.Empty, err.Description);
+        }
+
+        return View(model);
+    }
+    // GET: /Account/ChangePassword
+    [HttpGet]
+    [Authorize]
+    public IActionResult ChangePassword()
+    {
+        return View(new ChangePasswordViewModel());
+    }
+
+    // POST: /Account/ChangePassword
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+            return RedirectToAction("Login");
+
+        var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        
+        if (result.Succeeded)
+        {
+            await _signInManager.RefreshSignInAsync(user); // Giữ phiên đăng nhập
+            TempData["Success"] = "Đổi mật khẩu thành công!";
+            return RedirectToAction("ChangePassword");
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
         }
 
         return View(model);

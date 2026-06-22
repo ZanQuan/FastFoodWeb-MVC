@@ -110,12 +110,28 @@
                             }
                         </a>
                     }
-                    <form asp-controller="Account" asp-action="Logout"
-                          method="post" style="display:inline">
-                        <button type="submit" class="btn-order">
-                            <i class="ti ti-logout"></i> Đăng xuất
+
+                    <div class="user-dropdown">
+                        <button class="user-dropdown-toggle" id="userDropdownBtn">
+                            <span>Hi @User.Identity!.Name</span>
+                            <i class="ti ti-user-circle"></i>
+                            <i class="ti ti-chevron-down" id="userDropdownArrow"></i>
                         </button>
-                    </form>
+                        <ul class="user-dropdown-menu" id="userDropdownMenu">
+                            <li>
+                                <a asp-controller="Account" asp-action="ChangePassword">
+                                    <i class="ti ti-key"></i> Đổi mật khẩu
+                                </a>
+                            </li>
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit">
+                                        <i class="ti ti-logout"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 }
                 else
                 {

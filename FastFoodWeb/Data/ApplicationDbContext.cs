@@ -288,7 +288,7 @@ public class ApplicationDbContext : IdentityDbContext
                 Price = 49000,
                 CategoryId = 4,
                 Description = "Dâu tây tươi xay nhuyễn, sữa tươi không đường, đá bào mịn.",
-                ImageUrl = "/images/cocacola.jpg",
+                ImageUrl = "/images/sinhtodau.jpg",
                 Stock = 100,
                 IsAvailable = true,
                 IsFeatured = false
@@ -300,7 +300,7 @@ public class ApplicationDbContext : IdentityDbContext
                 Price = 39000,
                 CategoryId = 4,
                 Description = "Cam Valencia ép tươi nguyên chất, không thêm đường, giàu vitamin C.",
-                ImageUrl = "/images/sinhtodau.jpg",
+                ImageUrl = "/images/nuoccamep.jpg",
                 Stock = 120,
                 IsAvailable = true,
                 IsFeatured = false

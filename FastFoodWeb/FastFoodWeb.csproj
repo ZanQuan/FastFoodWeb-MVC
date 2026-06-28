@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Admin\" />
-    <Folder Include="Views\Admin\" />
+    <Compile Remove="Controllers\Admin\**" />
+    <Compile Remove="Views\Admin\**" />
+    <Content Remove="Controllers\Admin\**" />
+    <Content Remove="Views\Admin\**" />
+    <EmbeddedResource Remove="Controllers\Admin\**" />
+    <EmbeddedResource Remove="Views\Admin\**" />
+    <None Remove="Controllers\Admin\**" />
+    <None Remove="Views\Admin\**" />
   </ItemGroup>
 
   <ItemGroup>

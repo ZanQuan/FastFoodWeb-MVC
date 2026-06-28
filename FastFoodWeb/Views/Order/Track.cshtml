@@ -161,6 +161,35 @@
             }
         }
 
+        @* ── THANH TOÁN ── *@
+        <div style="background:#fff;border:1px solid #F0E8DF;border-radius:16px;padding:20px;margin-bottom:20px">
+            <h3 style="font-size:14px;font-weight:600;margin-bottom:14px">
+                <i class="ti ti-credit-card" style="color:var(--brand)"></i> Thanh toán
+            </h3>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+                <span style="color:var(--text-muted)">Phương thức</span>
+                <span style="font-weight:600">
+                    @if (Model.PaymentMethod == "VNPay")
+                    {
+                        <span><i class="ti ti-credit-card"></i> VNPay (online)</span>
+                    }
+                    else
+                    {
+                        <span><i class="ti ti-cash"></i> Tiền mặt (COD)</span>
+                    }
+                </span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px">
+                <span style="color:var(--text-muted)">Trạng thái</span>
+                @{
+                    var psColor = Model.PaymentStatus == "Đã thanh toán" ? "#1D9E75"
+                                : Model.PaymentStatus == "Thất bại"      ? "#E24B4A"
+                                : "#f59e0b";
+                }
+                <span style="font-weight:700;color:@psColor">@Model.PaymentStatus</span>
+            </div>
+        </div>
+
         @* ── TÓM TẮT ĐƠN HÀNG ── *@
         <div style="background:#fff;border:1px solid #F0E8DF;border-radius:16px;padding:20px;margin-bottom:20px">
             <h3 style="font-size:14px;font-weight:600;margin-bottom:14px">

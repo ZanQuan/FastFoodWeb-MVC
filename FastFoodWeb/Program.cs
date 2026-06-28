@@ -40,6 +40,10 @@ builder.Services.AddSession(opt =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddSignalR();
+
+// VNPay
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<FastFoodWeb.Services.VnPayService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

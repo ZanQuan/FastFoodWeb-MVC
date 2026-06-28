@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Đặt hàng";
     var cart = ViewBag.Cart as List<FastFoodWeb.Models.CartItem>;
     decimal total = ViewBag.Total;
@@ -14,14 +14,14 @@
 
         <div class="checkout-grid">
 
-            @* CỘT TRÁI: Form địa chỉ *@
+            @* CỘT TRÁI: Form địa chỉ + phương thức thanh toán *@
             <div>
                 <h4 style="margin-bottom:1.25rem; font-family:var(--font-head);
                            font-weight:700; color:var(--dark);">
                     Thông tin giao hàng
                 </h4>
 
-                <form asp-action="Checkout" method="post">
+                <form asp-action="Checkout" method="post" id="checkoutForm">
                     @Html.AntiForgeryToken()
 
                     <div style="margin-bottom:1.25rem;">
@@ -46,7 +46,7 @@
                                       margin-bottom:6px; font-size:0.9rem;">
                             Ghi chú
                         </label>
-                        <textarea name="note" rows="4"
+                        <textarea name="note" rows="3"
                                   placeholder="Ghi chú thêm cho đơn hàng (không bắt buộc)..."
                                   style="width:100%; padding:10px 14px;
                                          border:1.5px solid var(--border);
@@ -58,8 +58,50 @@
                                   onblur="this.style.borderColor='var(--border)'"></textarea>
                     </div>
 
-                    <button type="submit" class="btn-order" style="width:100%;">
-                        <i class="ti ti-check"></i> Xác nhận đặt hàng
+                    @* ── PHƯƠNG THỨC THANH TOÁN ── *@
+                    <div style="margin-bottom:1.75rem;">
+                        <label style="display:block; font-weight:700;
+                                      margin-bottom:12px; font-size:0.95rem; color:var(--dark);">
+                            Phương thức thanh toán
+                        </label>
+
+                        <div class="pay-option" id="opt-cod" onclick="selectPay('COD')">
+                            <input type="radio" name="paymentMethod" value="COD"
+                                   id="pm-cod" checked hidden />
+                            <div class="pay-icon" style="background:#fff8e1; color:#f59e0b;">
+                                <i class="ti ti-cash"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:700; color:var(--dark);">Thanh toán khi nhận hàng (COD)</div>
+                                <div style="font-size:0.82rem; color:var(--text-muted);">Trả tiền mặt khi shipper giao hàng tận nơi</div>
+                            </div>
+                        </div>
+
+                        <div class="pay-option" id="opt-vnpay" onclick="selectPay('VNPay')">
+                            <input type="radio" name="paymentMethod" value="VNPay"
+                                   id="pm-vnpay" hidden />
+                            <div class="pay-icon" style="background:#e8f5e9; color:#1a8a3b;">
+                                <i class="ti ti-credit-card"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:700; color:var(--dark);">
+                                    Thanh toán online qua VNPay
+                                </div>
+                                <div style="font-size:0.82rem; color:var(--text-muted);">
+                                    Thẻ ATM, Visa, MasterCard, QR Code, Ví điện tử...
+                                </div>
+                            </div>
+                            <div style="margin-left:auto; flex-shrink:0;">
+                                <img src="https://sandbox.vnpayment.vn/paymentv2/images/bank/vnpayqr.png"
+                                     alt="VNPay" style="height:28px; border-radius:4px;"
+                                     onerror="this.style.display='none'" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-order" style="width:100%;">
+                        <i class="ti ti-check" id="btnIcon"></i>
+                        <span id="btnText">Xác nhận đặt hàng</span>
                     </button>
                 </form>
             </div>
@@ -101,13 +143,20 @@
                             @total.ToString("N0") VNĐ
                         </span>
                     </div>
-
                 </div>
 
                 <p style="font-size:0.82rem; color:var(--text-faint);
                            margin-top:0.75rem; text-align:center;">
                     <i class="ti ti-truck"></i> Miễn phí giao hàng trong nội thành
                 </p>
+
+                @* Secure badge *@
+                <div style="margin-top:1rem; padding:0.75rem; background:#f0fdf4;
+                            border:1px solid #bbf7d0; border-radius:var(--r-sm);
+                            display:flex; align-items:center; gap:8px; font-size:0.82rem; color:#166534;">
+                    <i class="ti ti-shield-check" style="font-size:1.1rem;"></i>
+                    Thanh toán bảo mật 100% qua VNPay SSL
+                </div>
             </div>
 
         </div>
@@ -123,12 +172,71 @@
     }
 
     @@media (max-width: 768px) {
-        .checkout-grid {
-            grid-template-columns: 1fr;
-        }
+        .checkout-grid { grid-template-columns: 1fr; }
+        .checkout-grid > div:last-child { order: -1; }
+    }
 
-            .checkout-grid > div:last-child {
-                order: -1;
-            }
+    .pay-option {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 2px solid var(--border);
+        border-radius: var(--r-sm);
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: border-color 0.2s, background 0.2s;
+        background: #fff;
+    }
+
+    .pay-option.selected {
+        border-color: var(--brand);
+        background: #fff8f0;
+    }
+
+    .pay-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
     }
 </style>
+
+@section Scripts {
+<script>
+    // Khởi tạo trạng thái mặc định COD
+    document.querySelector('#opt-cod').classList.add('selected');
+
+    function selectPay(method) {
+        // Cập nhật radio
+        document.getElementById('pm-cod').checked   = method === 'COD';
+        document.getElementById('pm-vnpay').checked = method === 'VNPay';
+
+        // Cập nhật UI
+        document.getElementById('opt-cod').classList.toggle('selected', method === 'COD');
+        document.getElementById('opt-vnpay').classList.toggle('selected', method === 'VNPay');
+
+        // Cập nhật nút
+        const icon = document.getElementById('btnIcon');
+        const text = document.getElementById('btnText');
+        if (method === 'VNPay') {
+            icon.className = 'ti ti-credit-card';
+            text.textContent = 'Thanh toán qua VNPay';
+        } else {
+            icon.className = 'ti ti-check';
+            text.textContent = 'Xác nhận đặt hàng';
+        }
+    }
+
+    // Ngăn submit 2 lần
+    document.getElementById('checkoutForm').addEventListener('submit', function () {
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.style.opacity = '0.7';
+    });
+</script>
+}

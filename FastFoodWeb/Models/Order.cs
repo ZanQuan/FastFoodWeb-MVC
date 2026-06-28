@@ -28,5 +28,17 @@ public class Order
     [Display(Name = "Ghi chú")]
     public string? Note { get; set; }
 
+    // ── Thanh toán ──────────────────────────────────────────────────────
+    /// <summary>"COD" | "VNPay"</summary>
+    [Display(Name = "Phương thức thanh toán")]
+    public string PaymentMethod { get; set; } = "COD";
+
+    /// <summary>"Chưa thanh toán" | "Đã thanh toán" | "Thất bại"</summary>
+    [Display(Name = "Trạng thái thanh toán")]
+    public string PaymentStatus { get; set; } = "Chưa thanh toán";
+
+    /// <summary>Mã giao dịch VNPay trả về (vnp_TxnRef)</summary>
+    public string? VnPayTxnRef { get; set; }
+
     public ICollection<OrderDetail> OrderDetails { get; set; } = [];
 }

@@ -79,6 +79,7 @@ else
                     <th>Địa chỉ giao</th>
                     <th>Số món</th>
                     <th>Tổng tiền</th>
+                    <th>Thanh toán</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
@@ -113,6 +114,17 @@ else
                         <td style="text-align:center">@o.OrderDetails.Count</td>
                         <td style="font-weight:600;color:#FF5C1A">
                             @o.TotalPrice.ToString("N0")đ
+                        </td>
+                        <td>
+                            @{
+                                var psColor2 = o.PaymentStatus == "Đã thanh toán" ? "#1D9E75"
+                                             : o.PaymentStatus == "Thất bại"      ? "#E24B4A"
+                                             : "#f59e0b";
+                            }
+                            <div style="font-size:11px;font-weight:600;color:@psColor2">
+                                @o.PaymentStatus
+                            </div>
+                            <div style="font-size:10px;color:#999">@o.PaymentMethod</div>
                         </td>
                         <td>
                             <span class="status-badge"
